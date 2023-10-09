@@ -1,0 +1,659 @@
+{
+	"info": {
+		"_postman_id": "e88ad3be-72f4-448c-8d31-8333697ac76c",
+		"name": "API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Register user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var expectedResult = \"User with name \" + pm.variables.get(\"username\");",
+											"    ",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(expectedResult);",
+											"});",
+											"",
+											"const nameMatch = responseBody.match(/name (\\w+)/);",
+											"const idMatch = responseBody.match(/id (\\d+)/);",
+											"",
+											"// Check if the matches were found and set them as collection variables",
+											"if (nameMatch && idMatch) {",
+											"    const name = nameMatch[1];",
+											"    const id = idMatch[1];",
+											"    ",
+											"    pm.collectionVariables.set(\"user_name\", name);",
+											"    pm.collectionVariables.set(\"userID\", id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6655a866-6fbf-479a-b646-015d75209a99",
+										"exec": [
+											"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
+											"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
+											"",
+											"const min = 100;",
+											"const max = 157;",
+											"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
+											"",
+											"// Set the random number as an environment variable",
+											"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "9b6458ca-d434-4e09-99f6-4f2ea8e87610",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \"authorities\": [\n    \"{{userl_role}}\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users/"
+							},
+							"response": []
+						},
+						{
+							"name": "Authenticate user",
+							"id": "1ff9409b-4c06-467c-8c54-022debb82a8f",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{user_name}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{baseurl}}/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Get user by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f2dcd4dd-2f07-429a-b27b-e76f9a029932",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Get the expected username and id value from the environment",
+											"var expectedUsername = pm.collectionVariables.get(\"user_name\");",
+											"var expectedUserID = pm.collectionVariables.get(\"userID\");",
+											"",
+											"var responseUsername = pm.response.json().username;",
+											"var responseUserID = pm.response.json().id;",
+											"",
+											"// Check if the expected username matches the response username",
+											"pm.test(\"Usernames should match\", function () {",
+											"    pm.expect(responseUsername).to.eql(expectedUsername);",
+											"});",
+											"",
+											"// Check if the expected username matches the response username",
+											"pm.test(\"IDs should match\", function () {",
+											"    pm.expect(responseUserID.toString()).to.eql(expectedUserID);",
+											"});",
+											"",
+											"",
+											"var expertise = pm.response.json().expertise;",
+											"pm.collectionVariables.set(\"userExpertise\", expertise);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "79d12f6b-37fa-4059-9126-4fb4f483ba4a",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/users/auth/{{userID}}?principal={{user_name}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"auth",
+										"{{userID}}"
+									],
+									"query": [
+										{
+											"key": "principal",
+											"value": "{{user_name}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get users by expertise",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "9b4d30db-da77-494e-bb8c-2a906c701945",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Get the \"category\" name from the response",
+											"var categoryName = pm.response.json()[0].expertiseProfile.category.name;",
+											"",
+											"// Get the \"userExpertise\" collection variable",
+											"var userExpertise = pm.collectionVariables.get(\"userExpertise\");",
+											"",
+											"// Check if the \"category\" name matches the \"userExpertise\" variable",
+											"pm.test(\"Category name should match expertise\", function () {",
+											"    pm.expect(categoryName).to.equal(userExpertise);",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "d225ad0c-bb14-4dfc-841a-149173dc696a",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"{{userExpertise}}\",\n  \"searchParam2\": \"\",\n  \"size\": 100\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users"
+							},
+							"response": []
+						},
+						{
+							"name": "Get users by first name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f9590b0c-ab44-4044-8dac-cc3cf63debb8",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "085685cd-bdbf-4954-9323-95dad6dc12dc",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"{{user_firstName}}\",\n  \"size\": 1\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users"
+							},
+							"response": []
+						},
+						{
+							"name": "Get users by full name",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "f54363dd-0681-4a1a-976d-b737fee930c2",
+										"exec": [
+											"var fullName = pm.collectionVariables.get(\"user_firstName\") + \" \" + pm.collectionVariables.get(\"user_lastName\");",
+											"",
+											"pm.collectionVariables.set(\"user_fullName\", fullName);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "0cb6e12f-abc4-4de6-af69-3addc3ef5b80",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "faac9b13-5330-4406-a546-54baf2438f61",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"{{user_fullName}}\",\n  \"size\": 1\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users"
+							},
+							"response": []
+						},
+						{
+							"name": "Upgrade user's personal profile",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "4066802b-4013-445c-acef-7649470aa0e1",
+										"exec": [
+											"// Generate a random birth date within a desired range",
+											"function getRandomDate(minYear, maxYear) {",
+											"    const year = Math.floor(Math.random() * (maxYear - minYear + 1)) + minYear;",
+											"    const month = Math.floor(Math.random() * 12) + 1; // Months are 1-12",
+											"    const day = Math.floor(Math.random() * 31) + 1; // Days are 1-31",
+											"",
+											"    // Ensure the day and month are formatted with leading zeros if needed",
+											"    const formattedMonth = month.toString().padStart(2, '0');",
+											"    const formattedDay = day.toString().padStart(2, '0');",
+											"",
+											"    return `${year}-${formattedMonth}-${formattedDay}`;",
+											"}",
+											"",
+											"// Define the desired birth date range (adjust as needed)",
+											"const minBirthYear = 1930;",
+											"const maxBirthYear = 2008;",
+											"",
+											"// Generate a random birth date within the specified range",
+											"const randomBirthDate = getRandomDate(minBirthYear, maxBirthYear);",
+											"",
+											"// Set the random birth date as a collection variable",
+											"pm.collectionVariables.set(\"user_birthDate\", randomBirthDate);",
+											"",
+											"",
+											"",
+											"// Set random first and last name",
+											"pm.collectionVariables.set(\"user_firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+											"pm.collectionVariables.set(\"user_lastName\", pm.variables.replaceIn('{{$randomLastName}}'));",
+											"",
+											"// Set random city",
+											"// Parse the CSV content from the environment variable",
+											"const cityCSV = pm.collectionVariables.get(\"cityData\").split('\\n');",
+											"const randomIndex = Math.floor(Math.random() * cityCSV.length);",
+											"",
+											"// Select a random city and its ID",
+											"const [cityId, cityName] = cityCSV[randomIndex].split(',');",
+											"",
+											"",
+											"// Set the \"city\" and \"id\" variables in the request environment",
+											"pm.collectionVariables.set(\"city_name\", cityName.trim());",
+											"pm.collectionVariables.set(\"city_id\", parseInt(cityId));",
+											"",
+											"",
+											"// Set either MALE or FEMALE as sex",
+											"const sexes = [\"MALE\", \"FEMALE\"];",
+											"",
+											"// Generate a random index to select a value",
+											"const index = Math.floor(Math.random() * sexes.length);",
+											"",
+											"// Get the random sex value",
+											"const randomSex = sexes[index];",
+											"",
+											"// Set the random sex as a collection variable",
+											"pm.collectionVariables.set(\"user_sex\", randomSex);",
+											"",
+											"// Set picture privacy",
+											"// Generate a random boolean value (true or false)",
+											"const randomBoolean = Math.random() < 0.5;",
+											"",
+											"// Set the random boolean value as a collection variable",
+											"pm.collectionVariables.set(\"user_picturePrivacy\", randomBoolean);",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "81d08878-f7ea-484c-bb72-7eef3151db56",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check birthYear in response\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson.birthYear).to.equal(pm.collectionVariables.get(\"user_birthDate\"));",
+											"});",
+											"",
+											"pm.test(\"Check firstName in response\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson.firstName).to.equal(pm.collectionVariables.get(\"user_firstName\"));",
+											"});",
+											"",
+											"pm.test(\"Check lastName in response\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson.lastName).to.equal(pm.collectionVariables.get(\"user_lastName\"));",
+											"});",
+											"",
+											"pm.test(\"Check picturePrivacy in response\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const expectedPicturePrivacy = pm.collectionVariables.get(\"user_picturePrivacy\"); ",
+											"",
+											"    pm.expect(responseJson.picturePrivacy).to.equal(expectedPicturePrivacy);",
+											"});",
+											"",
+											"pm.test(\"Check sex in response\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson.sex).to.equal(pm.collectionVariables.get(\"user_sex\"));",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "da81b883-bcf0-44e9-bb55-95b1a54de5eb",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"birthYear\": \"{{user_birthDate}}\",\n  \"firstName\": \"{{user_firstName}}\",\n  \"lastName\": \"{{user_lastName}}\",\n  \"location\": {\n    \"city\": {\n      \"city\": \"{{city_name}}\",\n      \"country\": {},\n      \"id\": {{city_id}}\n    }\n    ,\n    \"id\": 1\n  },\n  \"picturePrivacy\": {{user_picturePrivacy}},\n  \"sex\": \"{{user_sex}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users/auth/{{userID}}/personal"
+							},
+							"response": []
+						},
+						{
+							"name": "Upgrade user's expertise profile",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "4066802b-4013-445c-acef-7649470aa0e1",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "81d08878-f7ea-484c-bb72-7eef3151db56",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "2d2044ce-9886-4f58-b8ab-bd0da9d69a3a",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"availability\": 1,\n  \"category\": {\n    \"id\": 158, \n    \"name\": \"Player\"\n  },\n  \"id\": 0,\n\"skill1\": \"cook\",\n  \"skill2\": \"clean\",\n  \"skill3\": \"vacuum\",\n  \"skill4\": \"dust\",\n  \"skill5\": \"wash\",\n  \"skills\":[\"more\", \"and more\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users/auth/{{userID}}/expertise"
+							},
+							"response": []
+						}
+					],
+					"id": "7c19d275-08c0-4d6d-a5a2-94c0e6a6798a"
+				}
+			],
+			"id": "43589dd2-6389-47eb-be45-6b8cffbd9116"
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "New Request",
+							"id": "7e1ee0c1-6719-4673-ba1d-81907cf4746f",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"index\": 1,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"\",\n  \"size\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users/{{userID}}/post"
+							},
+							"response": []
+						}
+					],
+					"id": "c964e4f8-b633-40d8-9c8c-b128bfcb5e6f"
+				}
+			],
+			"id": "ddf9e4ed-713c-4209-b369-abf21b1fbee3"
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": {
+			"password": "pass123*A",
+			"username": "adminOne"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5376f76d-ba46-41d2-ba18-6bf0ae10e267",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "e291818d-fabc-4b32-b1e0-69ef8ebf97dc",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "password",
+			"value": "123456*A"
+		},
+		{
+			"key": "baseurl",
+			"value": "http://localhost:8081"
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "userID",
+			"value": "41"
+		},
+		{
+			"key": "user_name",
+			"value": "treddy"
+		},
+		{
+			"key": "randomNumber",
+			"value": ""
+		},
+		{
+			"key": "userExpertise",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "user_firstName",
+			"value": ""
+		},
+		{
+			"key": "cityData",
+			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
+			"type": "string"
+		},
+		{
+			"key": "user_lastName",
+			"value": ""
+		},
+		{
+			"key": "city_name",
+			"value": ""
+		},
+		{
+			"key": "city_id",
+			"value": ""
+		},
+		{
+			"key": "user_birthDate",
+			"value": ""
+		},
+		{
+			"key": "user_fullName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_sex",
+			"value": ""
+		},
+		{
+			"key": "user_picturePrivacy",
+			"value": ""
+		}
+	]
+}

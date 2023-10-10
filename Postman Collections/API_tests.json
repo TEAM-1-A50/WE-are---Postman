@@ -74,7 +74,81 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \"authorities\": [\n    \"{{userl_role}}\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+									"raw": "{  \"authorities\": [\n    \"{{user_role}}\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{baseurl}}/api/users/"
+							},
+							"response": []
+						},
+						{
+							"name": "Register admin user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var expectedResult = \"User with name \" + pm.variables.get(\"username\");",
+											"    ",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(expectedResult);",
+											"});",
+											"",
+											"const nameMatch = responseBody.match(/name (\\w+)/);",
+											"const idMatch = responseBody.match(/id (\\d+)/);",
+											"",
+											"// Check if the matches were found and set them as collection variables",
+											"if (nameMatch && idMatch) {",
+											"    const name = nameMatch[1];",
+											"    const id = idMatch[1];",
+											"    ",
+											"    pm.collectionVariables.set(\"user_name\", name);",
+											"    pm.collectionVariables.set(\"userID\", id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6655a866-6fbf-479a-b646-015d75209a99",
+										"exec": [
+											"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
+											"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
+											"",
+											"const min = 100;",
+											"const max = 157;",
+											"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
+											"",
+											"// Set the random number as an environment variable",
+											"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "0c08c365-5f33-42ce-9d99-4d84cfbcfd34",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \"authorities\": [\n    \"com.community.weare.Models.Role@551a2d42\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -226,7 +300,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"{{userExpertise}}\",\n  \"searchParam2\": \"\",\n  \"size\": 100\n\n}",
+									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"{{userExpertise}}\",\n  \"searchParam2\": \"\",\n  \"size\": 5\n\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -536,7 +610,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"index\": 1,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"\",\n  \"size\": 1\n}",
+									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"%\",\n  \"searchParam2\": \"\",\n  \"size\": 1\n}",
 									"options": {
 										"raw": {
 											"language": "json"

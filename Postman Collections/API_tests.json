@@ -1296,6 +1296,20 @@
 						},
 						{
 							"name": "Authenticate user A",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4cef4d17-b20f-4244-a5d5-cf09b5e232ca",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"id": "3d5c522e-983b-4ef3-9c02-30b58e55eda7",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1423,6 +1437,34 @@
 						},
 						{
 							"name": "User A sends connection request to user B",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "96ef4499-346d-4275-9791-26fd9cc665f7",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+											"});",
+											"",
+											"pm.test(\"Response includes two usernames\", function () {",
+											"    // Define the expected usernames",
+											"    const expectedSender = pm.collectionVariables.get('senderUsername');",
+											"    const expectedRecipient = pm.collectionVariables.get('recipientUsername');",
+											"",
+											"    // Extract the response text",
+											"    const responseText = pm.response.text();",
+											"",
+											"    // Check if both usernames are present in the response",
+											"    pm.expect(responseText).to.include(expectedSender);",
+											"    pm.expect(responseText).to.include(expectedRecipient);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"id": "9eb833e0-a112-4c96-b2af-9d6d1162b8a3",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1445,6 +1487,20 @@
 						},
 						{
 							"name": "Authenticate user B",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a310c772-8e68-4194-934d-777cf1381270",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"id": "6c58b707-6417-4026-a8f3-3c7b55783686",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1519,6 +1575,34 @@
 						},
 						{
 							"name": "Approve connection request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "029624f0-8cde-416a-8020-1c369125e1e9",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+											"});",
+											"",
+											"pm.test(\"Response includes two usernames\", function () {",
+											"    // Define the expected usernames",
+											"    const expectedSender = pm.collectionVariables.get('senderUsername');",
+											"    const expectedRecipient = pm.collectionVariables.get('recipientUsername');;",
+											"",
+											"    // Extract the response text",
+											"    const responseText = pm.response.text();",
+											"",
+											"    // Check if both usernames are present in the response",
+											"    pm.expect(responseText).to.include(expectedSender);",
+											"    pm.expect(responseText).to.include(expectedRecipient);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"id": "e47541fe-bc11-4957-9bda-31361010c184",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1542,8 +1626,7 @@
 									"query": [
 										{
 											"key": "requestId",
-											"value": "{{requestId}}",
-											"type": "text"
+											"value": "{{requestId}}"
 										}
 									]
 								}
@@ -1562,21 +1645,18 @@
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
 											"});",
 											"",
-											"pm.test(\"Approved status is false\", function () {",
+											"pm.test(\"Response is an empty array\", function () {",
 											"    // Extract the response data as JSON",
 											"    const responseData = pm.response.json();",
-											"    const firstObject = responseData[0];",
 											"",
-											"    // Validate the \"approved\" status",
-											"    pm.expect(firstObject.approved, \"Expected 'approved' status to be false\").to.equal(false);",
+											"    // Check if the response data is an array and is empty",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    pm.expect(responseData).to.be.empty;",
 											"});",
 											"",
 											"",
-											"const responseData = pm.response.json();",
-											"const requestId = parseInt(responseData[0].id, 10);",
 											"",
-											"// Set the ID as a collection variable",
-											"pm.collectionVariables.set(\"requestId\", requestId);"
+											""
 										],
 										"type": "text/javascript"
 									}

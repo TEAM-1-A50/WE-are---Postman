@@ -591,6 +591,180 @@
 										"url": "{{baseurl}}/api/users/auth/{{userID}}/personal"
 									},
 									"response": []
+								},
+								{
+									"name": "Get users by expertise",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "9b4d30db-da77-494e-bb8c-2a906c701945",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+													"});",
+													"",
+													"// Get the \"category\" name from the response",
+													"var categoryName = pm.response.json()[0].expertiseProfile.category.name;",
+													"",
+													"// Get the \"userExpertise\" collection variable",
+													"var userExpertise = pm.collectionVariables.get(\"userExpertise\");",
+													"",
+													"// Check if the \"category\" name matches the \"userExpertise\" variable",
+													"pm.test(\"Category name should match expertise\", function () {",
+													"    pm.expect(categoryName).to.equal(userExpertise,  \"Category name and expertise mismatch. Expected: \" + userExpertise + \", Actual: \" + categoryName);",
+													"});",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "d225ad0c-bb14-4dfc-841a-149173dc696a",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"{{userExpertise}}\",\n  \"searchParam2\": \"\",\n  \"size\": 5\n\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users"
+									},
+									"response": []
+								},
+								{
+									"name": "Get users by first name",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "f9590b0c-ab44-4044-8dac-cc3cf63debb8",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"// Define the request configuration",
+													"const getRequestConfig = {",
+													"    method: 'GET',",
+													"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
+													"};",
+													"",
+													"// Send the GET request",
+													"pm.sendRequest(getRequestConfig,  (err, response) => {",
+													"    if (err) {",
+													"        console.error(err);",
+													"        pm.test(\"Request failed\", function () {",
+													"            pm.expect.fail(\"GET request failed\");",
+													"        });",
+													"    } else {",
+													"        // Validate the response",
+													"        pm.test('response should be okay to process', () => {",
+													"        pm.expect(response).to.have.property('code', 200);});",
+													"        ",
+													"pm.test(\"User's first name is correct\", function () {",
+													"    var responseData = pm.response.json();",
+													"    var expectedFirstName = pm.collectionVariables.get(\"user_firstName\"); // Get the value from environment variable",
+													"    pm.expect(responseData.firstname).to.eql(expectedFirstName, \"Expected first name to be '\" + expectedFirstName + \"', but found '\" + responseData.firstname + \"'\");",
+													"});",
+													"",
+													"    }",
+													"});",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "bc9d446f-b0b5-44ca-980c-99f5481ee528",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "085685cd-bdbf-4954-9323-95dad6dc12dc",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"{{user_firstName}}\",\n  \"size\": 10\n\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users"
+									},
+									"response": []
+								},
+								{
+									"name": "Get users by full name",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "f54363dd-0681-4a1a-976d-b737fee930c2",
+												"exec": [
+													"var fullName = pm.collectionVariables.get(\"user_firstName\") + \" \" + pm.collectionVariables.get(\"user_lastName\");",
+													"",
+													"pm.collectionVariables.set(\"user_fullName\", fullName);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "0cb6e12f-abc4-4de6-af69-3addc3ef5b80",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "faac9b13-5330-4406-a546-54baf2438f61",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"{{user_fullName}}\",\n  \"size\": 1\n\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users"
+									},
+									"response": []
 								}
 							],
 							"id": "cd80d748-295e-4bfc-9513-9f0cd698c990"
@@ -983,255 +1157,6 @@
 								}
 							],
 							"id": "ed02da4d-880c-46cf-9084-a413e0ffbe87"
-						},
-						{
-							"name": "Get users by expertise",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "9b4d30db-da77-494e-bb8c-2a906c701945",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-											"});",
-											"",
-											"// Get the \"category\" name from the response",
-											"var categoryName = pm.response.json()[0].expertiseProfile.category.name;",
-											"",
-											"// Get the \"userExpertise\" collection variable",
-											"var userExpertise = pm.collectionVariables.get(\"userExpertise\");",
-											"",
-											"// Check if the \"category\" name matches the \"userExpertise\" variable",
-											"pm.test(\"Category name should match expertise\", function () {",
-											"    pm.expect(categoryName).to.equal(userExpertise,  \"Category name and expertise mismatch. Expected: \" + userExpertise + \", Actual: \" + categoryName);",
-											"});",
-											"",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "d225ad0c-bb14-4dfc-841a-149173dc696a",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"{{userExpertise}}\",\n  \"searchParam2\": \"\",\n  \"size\": 5\n\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users"
-							},
-							"response": []
-						},
-						{
-							"name": "Get users by first name",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "f9590b0c-ab44-4044-8dac-cc3cf63debb8",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"// Define the request configuration",
-											"const getRequestConfig = {",
-											"    method: 'GET',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
-											"};",
-											"",
-											"// Send the GET request",
-											"pm.sendRequest(getRequestConfig,  (err, response) => {",
-											"    if (err) {",
-											"        console.error(err);",
-											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"GET request failed\");",
-											"        });",
-											"    } else {",
-											"        // Validate the response",
-											"        pm.test('response should be okay to process', () => {",
-											"        pm.expect(response).to.have.property('code', 200);});",
-											"        ",
-											"pm.test(\"User's first name is correct\", function () {",
-											"    var responseData = pm.response.json();",
-											"    var expectedFirstName = pm.collectionVariables.get(\"user_firstName\"); // Get the value from environment variable",
-											"    pm.expect(responseData.firstname).to.eql(expectedFirstName, \"Expected first name to be '\" + expectedFirstName + \"', but found '\" + responseData.firstname + \"'\");",
-											"});",
-											"",
-											"    }",
-											"});",
-											"",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "bc9d446f-b0b5-44ca-980c-99f5481ee528",
-										"exec": [
-											"// To edit your own profile user must be authenticated",
-											"// Define the form data",
-											"const formData = {",
-											"    username: pm.collectionVariables.get(\"username\"),",
-											"    password: pm.collectionVariables.get(\"password\")",
-											"};",
-											"",
-											"// Define the POST request configuration",
-											"const aunthenticateConfig = {",
-											"    method: 'POST',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
-											"    header: {'Content-Type': 'application/x-www-form-urlencoded'},",
-											"    body: {",
-											"        mode: 'formdata',",
-											"        formdata: [",
-											"            { key: 'username', value: formData.username },",
-											"            { key: 'password', value: formData.password }",
-											"        ]",
-											"    }",
-											"};",
-											"",
-											"// Send the POST request",
-											"pm.sendRequest(aunthenticateConfig, function (err, response) {",
-											"    if (err) {",
-											"        console.error(err);",
-											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"Authentication failed\");",
-											"        });",
-											"    } ",
-											"});",
-											"",
-											"// Then update the uses's names",
-											"// Define the request body",
-											"const requestBody = {",
-											"    birthYear: pm.collectionVariables.get(\"user_birthDate\"),",
-											"    firstName: pm.collectionVariables.get(\"user_firstName\"),",
-											"    lastName: pm.collectionVariables.get(\"user_lastName\"),",
-											"    location: {",
-											"        city: {",
-											"            city: pm.collectionVariables.get(\"city_name\"),",
-											"            country: {},",
-											"            id: pm.collectionVariables.get(\"city_id\")",
-											"        },",
-											"        id: 1",
-											"    },",
-											"    picturePrivacy: pm.collectionVariables.get(\"user_picturePrivacy\"),",
-											"    sex: pm.collectionVariables.get(\"user_sex\")",
-											"};",
-											"",
-											"// Define the POST request configuration",
-											"const postRequestConfig = {",
-											"    method: 'POST',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}/personal`,",
-											"    header: 'Content-Type: application/json',",
-											"    body: JSON.stringify(requestBody)",
-											"};",
-											"",
-											"// Send the POST request",
-											"pm.sendRequest(postRequestConfig, function (err, response) {",
-											"    console.log(response.json());",
-											"    if (err) {",
-											"        console.error(err);",
-											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"Profile update failed\");",
-											"        });",
-											"    }",
-											"     else {",
-											"        // Extract and set the user's first name from the response",
-											"    ",
-											"        const responseData = response.json();",
-											"        const userFirstName = responseData.firstName;",
-											"        console.log(userFirstName);",
-											"        pm.collectionVariables.set(\"user_firstName\", userFirstName);",
-											"    }",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "085685cd-bdbf-4954-9323-95dad6dc12dc",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"{{user_firstName}}\",\n  \"size\": 10\n\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users"
-							},
-							"response": []
-						},
-						{
-							"name": "Get users by full name",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "f54363dd-0681-4a1a-976d-b737fee930c2",
-										"exec": [
-											"var fullName = pm.collectionVariables.get(\"user_firstName\") + \" \" + pm.collectionVariables.get(\"user_lastName\");",
-											"",
-											"pm.collectionVariables.set(\"user_fullName\", fullName);"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"id": "0cb6e12f-abc4-4de6-af69-3addc3ef5b80",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "faac9b13-5330-4406-a546-54baf2438f61",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"\",\n  \"searchParam2\": \"{{user_fullName}}\",\n  \"size\": 1\n\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users"
-							},
-							"response": []
 						}
 					],
 					"id": "7c19d275-08c0-4d6d-a5a2-94c0e6a6798a"

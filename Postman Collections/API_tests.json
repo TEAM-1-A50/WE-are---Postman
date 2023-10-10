@@ -1346,7 +1346,7 @@
 											"    const name = nameMatch[1];",
 											"    const id = idMatch[1];",
 											"    ",
-											"    pm.collectionVariables.set(\"username\", name);",
+											"    pm.collectionVariables.set(\"recipientUsername\", name);",
 											"    pm.collectionVariables.set(\"userID\", id);",
 											"}",
 											"",
@@ -1571,7 +1571,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "9164556a-3ed4-4fd4-ab07-2091ee19c390",
+				"id": "9af61033-8063-417e-8671-e80299d8cc95",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1581,7 +1581,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "0a005d18-3398-494c-8141-4143b1ab57e2",
+				"id": "50311b48-b81b-45c6-9e09-c1d1b5c4fcfb",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1662,16 +1662,14 @@
 			"value": ""
 		},
 		{
-			"key": "requestID",
-			"value": ""
-		},
-		{
 			"key": "senderUsername",
-			"value": ""
+			"value": "",
+			"type": "string"
 		},
 		{
 			"key": "recipientUsername",
-			"value": ""
+			"value": "",
+			"type": "string"
 		}
 	]
 }

@@ -1485,6 +1485,18 @@
 								"header": []
 							},
 							"response": []
+						},
+						{
+							"name": "New Request",
+							"id": "e47541fe-bc11-4957-9bda-31361010c184",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
 						}
 					],
 					"id": "3662d228-1b9e-4ced-a3a8-0eed9ca96ae3"
@@ -1622,6 +1634,10 @@
 		},
 		{
 			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "requestId",
 			"value": ""
 		}
 	]

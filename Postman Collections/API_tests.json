@@ -109,307 +109,384 @@
 										"url": "{{baseurl}}/api/users/"
 									},
 									"response": []
+								},
+								{
+									"name": "Register admin user",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+													"});",
+													"",
+													"",
+													"const nameMatch = responseBody.match(/name (\\w+)/);",
+													"const idMatch = responseBody.match(/id (\\d+)/);",
+													"",
+													"// Check if the matches were found and set them as collection variables",
+													"if (nameMatch && idMatch) {",
+													"    const name = nameMatch[1];",
+													"    const id = idMatch[1];",
+													"    ",
+													"    pm.collectionVariables.set(\"username\", name);",
+													"    pm.collectionVariables.set(\"userID\", id);",
+													"}",
+													"",
+													"// Define the request configuration",
+													"const getRequestConfig = {",
+													"    method: 'GET',",
+													"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
+													"};",
+													"",
+													"// Send the GET request",
+													"pm.sendRequest(getRequestConfig,  (err, response) => {",
+													"    console.log(response.json());",
+													"    if (err) {",
+													"        console.error(err);",
+													"        pm.test(\"Request failed\", function () {",
+													"            pm.expect.fail(\"GET request failed\");",
+													"        });",
+													"    } else {",
+													"        // Validate the response",
+													"        pm.test('response should be okay to process', () => {",
+													"        pm.expect(response).to.have.property('code', 200);});",
+													"",
+													"        var body = response.json();",
+													"        ",
+													"        pm.test(\"User role is ADMIN\", function () {",
+													"            var responseData = response.json();",
+													"        pm.expect(responseData.authorities).to.include('ROLE_ADMIN', \"Expected user role to be 'ROLE_ADMIN', but found '\" + responseData.authorities + \"'\");",
+													"    ",
+													"        });",
+													"    }",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "6655a866-6fbf-479a-b646-015d75209a99",
+												"exec": [
+													"var randomFirstName = pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
+													"randomFirstName = \"admin\" + randomFirstName;",
+													"pm.collectionVariables.set(\"username\", randomFirstName);",
+													"",
+													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
+													"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
+													"",
+													"const min = 100;",
+													"const max = 157;",
+													"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
+													"",
+													"// Set the random number as an environment variable",
+													"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "0c08c365-5f33-42ce-9d99-4d84cfbcfd34",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \"authorities\": [\n    \"ROLE_ADMIN\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users/"
+									},
+									"response": []
 								}
 							],
 							"id": "bcbefb39-92eb-4cd2-8fa0-3d0d549f599f"
 						},
 						{
-							"name": "Register user Copy",
-							"event": [
+							"name": "Get user by ID",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-											"});",
-											"",
-											"",
-											"const nameMatch = responseBody.match(/name (\\w+)/);",
-											"const idMatch = responseBody.match(/id (\\d+)/);",
-											"",
-											"// Check if the matches were found and set them as collection variables",
-											"if (nameMatch && idMatch) {",
-											"    const name = nameMatch[1];",
-											"    const id = idMatch[1];",
-											"    ",
-											"    pm.collectionVariables.set(\"username\", name);",
-											"    pm.collectionVariables.set(\"userID\", id);",
-											"}",
-											"",
-											"// Define the request configuration",
-											"const getRequestConfig = {",
-											"    method: 'GET',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
-											"};",
-											"",
-											"// Send the GET request",
-											"pm.sendRequest(getRequestConfig,  (err, response) => {",
-											"    console.log(response.json());",
-											"    if (err) {",
-											"        console.error(err);",
-											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"GET request failed\");",
-											"        });",
-											"    } else {",
-											"        // Validate the response",
-											"        pm.test('response should be okay to process', () => {",
-											"        pm.expect(response).to.have.property('code', 200);});",
-											"        ",
-											"        pm.test(\"User role is USER\", function () {",
-											"            var responseData = response.json();",
-											"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
-											"    ",
-											"        });",
-											"    }",
-											"});"
-										],
-										"type": "text/javascript"
-									}
+									"name": "Register user",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+													"});",
+													"",
+													"",
+													"const nameMatch = responseBody.match(/name (\\w+)/);",
+													"const idMatch = responseBody.match(/id (\\d+)/);",
+													"",
+													"// Check if the matches were found and set them as collection variables",
+													"if (nameMatch && idMatch) {",
+													"    const name = nameMatch[1];",
+													"    const id = idMatch[1];",
+													"    ",
+													"    pm.collectionVariables.set(\"username\", name);",
+													"    pm.collectionVariables.set(\"userID\", id);",
+													"}",
+													"",
+													"// Define the request configuration",
+													"const getRequestConfig = {",
+													"    method: 'GET',",
+													"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
+													"};",
+													"",
+													"// Send the GET request",
+													"pm.sendRequest(getRequestConfig,  (err, response) => {",
+													"    console.log(response.json());",
+													"    if (err) {",
+													"        console.error(err);",
+													"        pm.test(\"Request failed\", function () {",
+													"            pm.expect.fail(\"GET request failed\");",
+													"        });",
+													"    } else {",
+													"        // Validate the response",
+													"        pm.test('response should be okay to process', () => {",
+													"        pm.expect(response).to.have.property('code', 200);});",
+													"        ",
+													"        pm.test(\"User role is USER\", function () {",
+													"            var responseData = response.json();",
+													"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
+													"    ",
+													"        });",
+													"    }",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "6655a866-6fbf-479a-b646-015d75209a99",
+												"exec": [
+													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
+													"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
+													"",
+													"const min = 100;",
+													"const max = 157;",
+													"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
+													"",
+													"// Set the random number as an environment variable",
+													"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "8cd3500e-7390-4df9-b7ad-85d26ee08e58",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users/"
+									},
+									"response": []
 								},
 								{
-									"listen": "prerequest",
-									"script": {
-										"id": "6655a866-6fbf-479a-b646-015d75209a99",
-										"exec": [
-											"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
-											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
-											"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
-											"",
-											"const min = 100;",
-											"const max = 157;",
-											"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
-											"",
-											"// Set the random number as an environment variable",
-											"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
-											""
-										],
-										"type": "text/javascript"
-									}
+									"name": "Register admin user",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+													"});",
+													"",
+													"",
+													"const nameMatch = responseBody.match(/name (\\w+)/);",
+													"const idMatch = responseBody.match(/id (\\d+)/);",
+													"",
+													"// Check if the matches were found and set them as collection variables",
+													"if (nameMatch && idMatch) {",
+													"    const name = nameMatch[1];",
+													"    const id = idMatch[1];",
+													"    ",
+													"    pm.collectionVariables.set(\"username\", name);",
+													"    pm.collectionVariables.set(\"userID\", id);",
+													"}",
+													"",
+													"// Define the request configuration",
+													"const getRequestConfig = {",
+													"    method: 'GET',",
+													"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
+													"};",
+													"",
+													"// Send the GET request",
+													"pm.sendRequest(getRequestConfig,  (err, response) => {",
+													"    console.log(response.json());",
+													"    if (err) {",
+													"        console.error(err);",
+													"        pm.test(\"Request failed\", function () {",
+													"            pm.expect.fail(\"GET request failed\");",
+													"        });",
+													"    } else {",
+													"        // Validate the response",
+													"        pm.test('response should be okay to process', () => {",
+													"        pm.expect(response).to.have.property('code', 200);});",
+													"",
+													"        var body = response.json();",
+													"        ",
+													"        pm.test(\"User role is ADMIN\", function () {",
+													"            var responseData = response.json();",
+													"        pm.expect(responseData.authorities).to.include('ROLE_ADMIN', \"Expected user role to be 'ROLE_ADMIN', but found '\" + responseData.authorities + \"'\");",
+													"    ",
+													"        });",
+													"    }",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "6655a866-6fbf-479a-b646-015d75209a99",
+												"exec": [
+													"var randomFirstName = pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
+													"randomFirstName = \"admin\" + randomFirstName;",
+													"pm.collectionVariables.set(\"username\", randomFirstName);",
+													"",
+													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
+													"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
+													"",
+													"const min = 100;",
+													"const max = 157;",
+													"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
+													"",
+													"// Set the random number as an environment variable",
+													"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "328ee7cd-24e9-4030-b737-a6e0fbd8ec2a",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{  \"authorities\": [\n    \"ROLE_ADMIN\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users/"
+									},
+									"response": []
+								},
+								{
+									"name": "Get user by ID",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "f2dcd4dd-2f07-429a-b27b-e76f9a029932",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+													"});",
+													"",
+													"// Get the expected username and id value from the environment",
+													"var expectedUsername = pm.collectionVariables.get(\"username\");",
+													"var expectedUserID = pm.collectionVariables.get(\"userID\");",
+													"",
+													"var responseUsername = pm.response.json().username;",
+													"var responseUserID = pm.response.json().id;",
+													"",
+													"// Check if the expected username matches the response username",
+													"pm.test(\"Usernames should match\", function () {",
+													"    pm.expect(responseUsername).to.eql(expectedUsername, \"Username mismatch. Expected: \" + expectedUsername + \", Actual: \" + responseUsername);",
+													"});",
+													"",
+													"// Check if the expected username matches the response username",
+													"pm.test(\"IDs should match\", function () {",
+													"    pm.expect(responseUserID.toString()).to.eql(expectedUserID,  \"ID mismatch. Expected: \" + expectedUserID + \", Actual: \" + responseUserID);",
+													"});",
+													"",
+													"var expertise = pm.response.json().expertise;",
+													"pm.collectionVariables.set(\"userExpertise\", expertise);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "79d12f6b-37fa-4059-9126-4fb4f483ba4a",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{baseurl}}/api/users/auth/{{userID}}?principal={{username}}",
+											"host": [
+												"{{baseurl}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"auth",
+												"{{userID}}"
+											],
+											"query": [
+												{
+													"key": "principal",
+													"value": "{{username}}"
+												}
+											]
+										}
+									},
+									"response": []
 								}
 							],
-							"id": "8cd3500e-7390-4df9-b7ad-85d26ee08e58",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users/"
-							},
-							"response": []
-						},
-						{
-							"name": "Register admin user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-											"});",
-											"",
-											"",
-											"const nameMatch = responseBody.match(/name (\\w+)/);",
-											"const idMatch = responseBody.match(/id (\\d+)/);",
-											"",
-											"// Check if the matches were found and set them as collection variables",
-											"if (nameMatch && idMatch) {",
-											"    const name = nameMatch[1];",
-											"    const id = idMatch[1];",
-											"    ",
-											"    pm.collectionVariables.set(\"username\", name);",
-											"    pm.collectionVariables.set(\"userID\", id);",
-											"}",
-											"",
-											"// Define the request configuration",
-											"const getRequestConfig = {",
-											"    method: 'GET',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
-											"};",
-											"",
-											"// Send the GET request",
-											"pm.sendRequest(getRequestConfig,  (err, response) => {",
-											"    console.log(response.json());",
-											"    if (err) {",
-											"        console.error(err);",
-											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"GET request failed\");",
-											"        });",
-											"    } else {",
-											"        // Validate the response",
-											"        pm.test('response should be okay to process', () => {",
-											"        pm.expect(response).to.have.property('code', 200);});",
-											"",
-											"        var body = response.json();",
-											"        ",
-											"        pm.test(\"User role is ADMIN\", function () {",
-											"            var responseData = response.json();",
-											"        pm.expect(responseData.authorities).to.include('ROLE_ADMIN', \"Expected user role to be 'ROLE_ADMIN', but found '\" + responseData.authorities + \"'\");",
-											"    ",
-											"        });",
-											"    }",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "6655a866-6fbf-479a-b646-015d75209a99",
-										"exec": [
-											"var randomFirstName = pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
-											"randomFirstName = \"admin\" + randomFirstName;",
-											"pm.collectionVariables.set(\"username\", randomFirstName);",
-											"",
-											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
-											"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
-											"",
-											"const min = 100;",
-											"const max = 157;",
-											"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
-											"",
-											"// Set the random number as an environment variable",
-											"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "0c08c365-5f33-42ce-9d99-4d84cfbcfd34",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{  \"authorities\": [\n    \"ROLE_ADMIN\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users/"
-							},
-							"response": []
-						},
-						{
-							"name": "Register admin user Copy",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-											"});",
-											"",
-											"",
-											"const nameMatch = responseBody.match(/name (\\w+)/);",
-											"const idMatch = responseBody.match(/id (\\d+)/);",
-											"",
-											"// Check if the matches were found and set them as collection variables",
-											"if (nameMatch && idMatch) {",
-											"    const name = nameMatch[1];",
-											"    const id = idMatch[1];",
-											"    ",
-											"    pm.collectionVariables.set(\"username\", name);",
-											"    pm.collectionVariables.set(\"userID\", id);",
-											"}",
-											"",
-											"// Define the request configuration",
-											"const getRequestConfig = {",
-											"    method: 'GET',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
-											"};",
-											"",
-											"// Send the GET request",
-											"pm.sendRequest(getRequestConfig,  (err, response) => {",
-											"    console.log(response.json());",
-											"    if (err) {",
-											"        console.error(err);",
-											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"GET request failed\");",
-											"        });",
-											"    } else {",
-											"        // Validate the response",
-											"        pm.test('response should be okay to process', () => {",
-											"        pm.expect(response).to.have.property('code', 200);});",
-											"",
-											"        var body = response.json();",
-											"        ",
-											"        pm.test(\"User role is ADMIN\", function () {",
-											"            var responseData = response.json();",
-											"        pm.expect(responseData.authorities).to.include('ROLE_ADMIN', \"Expected user role to be 'ROLE_ADMIN', but found '\" + responseData.authorities + \"'\");",
-											"    ",
-											"        });",
-											"    }",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "6655a866-6fbf-479a-b646-015d75209a99",
-										"exec": [
-											"var randomFirstName = pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
-											"randomFirstName = \"admin\" + randomFirstName;",
-											"pm.collectionVariables.set(\"username\", randomFirstName);",
-											"",
-											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
-											"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
-											"",
-											"const min = 100;",
-											"const max = 157;",
-											"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
-											"",
-											"// Set the random number as an environment variable",
-											"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "328ee7cd-24e9-4030-b737-a6e0fbd8ec2a",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{  \"authorities\": [\n    \"ROLE_ADMIN\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users/"
-							},
-							"response": []
+							"id": "cd80d748-295e-4bfc-9513-9f0cd698c990"
 						},
 						{
 							"name": "Authenticate user",
@@ -439,77 +516,6 @@
 									]
 								},
 								"url": "{{baseurl}}/authenticate"
-							},
-							"response": []
-						},
-						{
-							"name": "Get user by ID",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "f2dcd4dd-2f07-429a-b27b-e76f9a029932",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-											"});",
-											"",
-											"// Get the expected username and id value from the environment",
-											"var expectedUsername = pm.collectionVariables.get(\"username\");",
-											"var expectedUserID = pm.collectionVariables.get(\"userID\");",
-											"",
-											"var responseUsername = pm.response.json().username;",
-											"var responseUserID = pm.response.json().id;",
-											"",
-											"// Check if the expected username matches the response username",
-											"pm.test(\"Usernames should match\", function () {",
-											"    pm.expect(responseUsername).to.eql(expectedUsername, \"Username mismatch. Expected: \" + expectedUsername + \", Actual: \" + responseUsername);",
-											"});",
-											"",
-											"// Check if the expected username matches the response username",
-											"pm.test(\"IDs should match\", function () {",
-											"    pm.expect(responseUserID.toString()).to.eql(expectedUserID,  \"ID mismatch. Expected: \" + expectedUserID + \", Actual: \" + responseUserID);",
-											"});",
-											"",
-											"var expertise = pm.response.json().expertise;",
-											"pm.collectionVariables.set(\"userExpertise\", expertise);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "79d12f6b-37fa-4059-9126-4fb4f483ba4a",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": []
-								},
-								"url": {
-									"raw": "{{baseurl}}/api/users/auth/{{userID}}?principal={{username}}",
-									"host": [
-										"{{baseurl}}"
-									],
-									"path": [
-										"api",
-										"users",
-										"auth",
-										"{{userID}}"
-									],
-									"query": [
-										{
-											"key": "principal",
-											"value": "{{username}}"
-										}
-									]
-								}
 							},
 							"response": []
 						},
@@ -838,7 +844,6 @@
 											"",
 											"// Send the GET request",
 											"pm.sendRequest(getRequestConfig,  (err, response) => {",
-											"    console.log(response.json());",
 											"    if (err) {",
 											"        console.error(err);",
 											"        pm.test(\"Request failed\", function () {",
@@ -872,16 +877,14 @@
 											"// Define the form data",
 											"const formData = {",
 											"    username: pm.collectionVariables.get(\"username\"),",
-											"",
 											"    password: pm.collectionVariables.get(\"password\")",
 											"};",
-											"    console.log(formData);",
 											"",
 											"// Define the POST request configuration",
 											"const aunthenticateConfig = {",
 											"    method: 'POST',",
 											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
-											"    header: 'Content-Type: application/x-www-form-urlencoded',",
+											"    header: {'Content-Type': 'application/x-www-form-urlencoded'},",
 											"    body: {",
 											"        mode: 'formdata',",
 											"        formdata: [",
@@ -893,11 +896,10 @@
 											"",
 											"// Send the POST request",
 											"pm.sendRequest(aunthenticateConfig, function (err, response) {",
-											"    console.log(response);",
 											"    if (err) {",
 											"        console.error(err);",
 											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"POST request failed\");",
+											"            pm.expect.fail(\"Authentication failed\");",
 											"        });",
 											"    } ",
 											"});",
@@ -930,16 +932,19 @@
 											"",
 											"// Send the POST request",
 											"pm.sendRequest(postRequestConfig, function (err, response) {",
-											"    console.log(response);",
+											"    console.log(response.json());",
 											"    if (err) {",
 											"        console.error(err);",
 											"        pm.test(\"Request failed\", function () {",
-											"            pm.expect.fail(\"POST request failed\");",
+											"            pm.expect.fail(\"Profile update failed\");",
 											"        });",
-											"    } else {",
+											"    }",
+											"     else {",
 											"        // Extract and set the user's first name from the response",
+											"    ",
 											"        const responseData = response.json();",
 											"        const userFirstName = responseData.firstName;",
+											"        console.log(userFirstName);",
 											"        pm.collectionVariables.set(\"user_firstName\", userFirstName);",
 											"    }",
 											"});",

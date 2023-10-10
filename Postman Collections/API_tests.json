@@ -495,7 +495,39 @@
 									"script": {
 										"id": "4066802b-4013-445c-acef-7649470aa0e1",
 										"exec": [
-											""
+											"// To edit your own profile user must be authenticated",
+											"// Define the form data",
+											"const formData = {",
+											"    username: pm.collectionVariables.get(\"username\"),",
+											"",
+											"    password: pm.collectionVariables.get(\"password\")",
+											"};",
+											"    console.log(formData);",
+											"",
+											"// Define the POST request configuration",
+											"const postRequestConfig = {",
+											"    method: 'POST',",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',",
+											"    body: {",
+											"        mode: 'formdata',",
+											"        formdata: [",
+											"            { key: 'username', value: formData.username },",
+											"            { key: 'password', value: formData.password }",
+											"        ]",
+											"    }",
+											"};",
+											"",
+											"// Send the POST request",
+											"pm.sendRequest(postRequestConfig, function (err, response) {",
+											"    console.log(response);",
+											"    if (err) {",
+											"        console.error(err);",
+											"        pm.test(\"Request failed\", function () {",
+											"            pm.expect.fail(\"POST request failed\");",
+											"        });",
+											"    } ",
+											"});"
 										],
 										"type": "text/javascript"
 									}
@@ -523,7 +555,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"availability\": 1,\n  \"category\": {\n    \"id\": 158, \n    \"name\": \"Player\"\n  },\n  \"id\": 0,\n\"skill1\": \"cook\",\n  \"skill2\": \"clean\",\n  \"skill3\": \"vacuum\",\n  \"skill4\": \"dust\",\n  \"skill5\": \"wash\",\n  \"skills\":[\"more\", \"and more\"]\n}",
+									"raw": "{\n  \"availability\": 6,\n  \"category\": {\n    \"id\": 106, \n    \"name\": \"Player\"\n  },\n  \"id\": 0,\n\"skill1\": \"cook\",\n  \"skill2\": \"clean\",\n  \"skill3\": \"vacuum\",\n  \"skill4\": \"dust\",\n  \"skill5\": \"wash\",\n  \"skills\":[\"more\", \"and more\"]\n}",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -1493,8 +1493,19 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"method": "GET",
-								"header": []
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "requestID",
+											"value": "{{requestID}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{baseurl}}/api/auth/users/{{userID}}/request/approve"
 							},
 							"response": []
 						}
@@ -1638,6 +1649,10 @@
 		},
 		{
 			"key": "requestId",
+			"value": ""
+		},
+		{
+			"key": "requestID",
 			"value": ""
 		}
 	]

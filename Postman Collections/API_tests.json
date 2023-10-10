@@ -1530,30 +1530,7 @@
 			"item": [
 				{
 					"name": "CRUD",
-					"item": [
-						{
-							"name": "New Request",
-							"id": "7e1ee0c1-6719-4673-ba1d-81907cf4746f",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"index\": 0,\n  \"next\": true,\n  \"searchParam1\": \"%\",\n  \"searchParam2\": \"\",\n  \"size\": 1\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseurl}}/api/users/{{userID}}/post"
-							},
-							"response": []
-						}
-					],
+					"item": [],
 					"id": "c964e4f8-b633-40d8-9c8c-b128bfcb5e6f"
 				}
 			],

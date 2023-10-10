@@ -1199,7 +1199,7 @@
 					"name": "Connection requests",
 					"item": [
 						{
-							"name": "Register user",
+							"name": "Register user A",
 							"event": [
 								{
 									"listen": "test",
@@ -1295,7 +1295,7 @@
 							"response": []
 						},
 						{
-							"name": "Authenticate user Copy",
+							"name": "Authenticate user A",
 							"id": "3d5c522e-983b-4ef3-9c02-30b58e55eda7",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1326,7 +1326,7 @@
 							"response": []
 						},
 						{
-							"name": "Register user Copy 2",
+							"name": "Register user B",
 							"event": [
 								{
 									"listen": "test",
@@ -1422,7 +1422,7 @@
 							"response": []
 						},
 						{
-							"name": "New Request",
+							"name": "User A sends connection request to user B",
 							"id": "9eb833e0-a112-4c96-b2af-9d6d1162b8a3",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true

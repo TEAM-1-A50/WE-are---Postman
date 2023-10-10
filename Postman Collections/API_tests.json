@@ -1219,7 +1219,7 @@
 											"    const name = nameMatch[1];",
 											"    const id = idMatch[1];",
 											"    ",
-											"    pm.collectionVariables.set(\"username\", name);",
+											"    pm.collectionVariables.set(\"senderUsername\", name);",
 											"    pm.collectionVariables.set(\"userID\", id);",
 											"}",
 											"",
@@ -1663,6 +1663,14 @@
 		},
 		{
 			"key": "requestID",
+			"value": ""
+		},
+		{
+			"key": "senderUsername",
+			"value": ""
+		},
+		{
+			"key": "recipientUsername",
 			"value": ""
 		}
 	]

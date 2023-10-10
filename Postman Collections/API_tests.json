@@ -39,7 +39,7 @@
 											"// Define the request configuration",
 											"const getRequestConfig = {",
 											"    method: 'GET',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('user_name')}`,",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
 											"};",
 											"",
 											"// Send the GET request",
@@ -54,8 +54,6 @@
 											"        // Validate the response",
 											"        pm.test('response should be okay to process', () => {",
 											"        pm.expect(response).to.have.property('code', 200);});",
-											"",
-											"        var body = response.json();",
 											"        ",
 											"        pm.test(\"User role is USER\", function () {",
 											"            var responseData = response.json();",
@@ -137,7 +135,7 @@
 											"// Define the request configuration",
 											"const getRequestConfig = {",
 											"    method: 'GET',",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('user_name')}`,",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
 											"};",
 											"",
 											"// Send the GET request",
@@ -199,7 +197,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \"authorities\": [\n    \"com.community.weare.Models.Role@551a2d42\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+									"raw": "{  \"authorities\": [\n    \"ROLE_ADMIN\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -227,7 +225,7 @@
 									"formdata": [
 										{
 											"key": "username",
-											"value": "{{user_name}}",
+											"value": "{{username}",
 											"type": "text"
 										},
 										{

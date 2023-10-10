@@ -1487,7 +1487,7 @@
 							"response": []
 						},
 						{
-							"name": "New Request",
+							"name": "Approve connection request",
 							"id": "e47541fe-bc11-4957-9bda-31361010c184",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1495,17 +1495,27 @@
 							"request": {
 								"method": "POST",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
+								"url": {
+									"raw": "{{baseurl}}/api/auth/users/{{userID}}/request/approve?requestId={{requestId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"users",
+										"{{userID}}",
+										"request",
+										"approve"
+									],
+									"query": [
 										{
-											"key": "requestID",
-											"value": "{{requestID}}",
+											"key": "requestId",
+											"value": "{{requestId}}",
 											"type": "text"
 										}
 									]
-								},
-								"url": "{{baseurl}}/api/auth/users/{{userID}}/request/approve"
+								}
 							},
 							"response": []
 						}

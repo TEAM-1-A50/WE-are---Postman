@@ -123,7 +123,17 @@
 									"script": {
 										"id": "6655a866-6fbf-479a-b646-015d75209a99",
 										"exec": [
-											"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+											"// Get the random first name from the collection variable",
+											"const randomFirstName = pm.collectionVariables.set(\"username\", pm.variables.replaceIn('admin{{$randomFirstName}}'));",
+											"",
+											"// Create the username by appending the random first name to \"admin\"",
+											"// const username = 'admin${randomFirstName}';",
+											"",
+											"// Set the username as a collection variable",
+											"pm.collectionVariables.set(\"username\", username);",
+											"",
+											"",
+											"",
 											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
 											"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
 											"",
@@ -639,7 +649,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "5376f76d-ba46-41d2-ba18-6bf0ae10e267",
+				"id": "bd1ffc0c-592e-41a0-8a71-43827ba1d719",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -649,7 +659,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "e291818d-fabc-4b32-b1e0-69ef8ebf97dc",
+				"id": "c77fd596-fc82-4d2e-90c2-a6a3938672e3",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -675,10 +685,6 @@
 			"value": "41"
 		},
 		{
-			"key": "user_name",
-			"value": "treddy"
-		},
-		{
 			"key": "randomNumber",
 			"value": ""
 		},
@@ -686,10 +692,6 @@
 			"key": "userExpertise",
 			"value": "",
 			"type": "string"
-		},
-		{
-			"key": "username",
-			"value": ""
 		},
 		{
 			"key": "user_firstName",
@@ -727,6 +729,10 @@
 		},
 		{
 			"key": "user_picturePrivacy",
+			"value": ""
+		},
+		{
+			"key": "username",
 			"value": ""
 		}
 	]

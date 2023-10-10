@@ -1476,13 +1476,44 @@
 						},
 						{
 							"name": "Get connection request by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c84321d6-c5f9-4104-b770-3c4d1a1ecf38",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+											"});",
+											"",
+											"pm.test(\"Approved status is false\", function () {",
+											"    // Extract the response data as JSON",
+											"    const responseData = pm.response.json();",
+											"    const firstObject = responseData[0];",
+											"",
+											"    // Validate the \"approved\" status",
+											"    pm.expect(firstObject.approved, \"Expected 'approved' status to be false\").to.equal(false);",
+											"});",
+											"",
+											"",
+											"const responseData = pm.response.json();",
+											"const requestId = parseInt(responseData[0].id, 10);",
+											"",
+											"// Set the ID as a collection variable",
+											"pm.collectionVariables.set(\"requestId\", requestId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"id": "c5d2f383-e35b-4184-b030-40b174a1b26a",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [],
+								"url": "{{baseurl}}/api/auth/users/{{userID}}/request/"
 							},
 							"response": []
 						},
@@ -1516,6 +1547,49 @@
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get connection request by ID Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c84321d6-c5f9-4104-b770-3c4d1a1ecf38",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
+											"});",
+											"",
+											"pm.test(\"Approved status is false\", function () {",
+											"    // Extract the response data as JSON",
+											"    const responseData = pm.response.json();",
+											"    const firstObject = responseData[0];",
+											"",
+											"    // Validate the \"approved\" status",
+											"    pm.expect(firstObject.approved, \"Expected 'approved' status to be false\").to.equal(false);",
+											"});",
+											"",
+											"",
+											"const responseData = pm.response.json();",
+											"const requestId = parseInt(responseData[0].id, 10);",
+											"",
+											"// Set the ID as a collection variable",
+											"pm.collectionVariables.set(\"requestId\", requestId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "8dbb9ac0-8f88-4825-ae83-12c506f65653",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{baseurl}}/api/auth/users/{{userID}}/request/"
 							},
 							"response": []
 						}

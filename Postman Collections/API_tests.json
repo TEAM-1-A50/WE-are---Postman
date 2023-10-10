@@ -1442,6 +1442,49 @@
 								"url": "{{baseurl}}/api/auth/request"
 							},
 							"response": []
+						},
+						{
+							"name": "Authenticate user B",
+							"id": "6c58b707-6417-4026-a8f3-3c7b55783686",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{baseurl}}/authenticate"
+							},
+							"response": []
+						},
+						{
+							"name": "Get connection request by ID",
+							"id": "c5d2f383-e35b-4184-b030-40b174a1b26a",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
 						}
 					],
 					"id": "3662d228-1b9e-4ced-a3a8-0eed9ca96ae3"

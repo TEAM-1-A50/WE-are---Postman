@@ -215,7 +215,7 @@
 							"id": "bcbefb39-92eb-4cd2-8fa0-3d0d549f599f"
 						},
 						{
-							"name": "Get user by ID",
+							"name": "Get user by ID, name or expertise",
 							"item": [
 								{
 									"name": "Register user",
@@ -314,107 +314,6 @@
 									"response": []
 								},
 								{
-									"name": "Register admin user",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-													"});",
-													"",
-													"",
-													"const nameMatch = responseBody.match(/name (\\w+)/);",
-													"const idMatch = responseBody.match(/id (\\d+)/);",
-													"",
-													"// Check if the matches were found and set them as collection variables",
-													"if (nameMatch && idMatch) {",
-													"    const name = nameMatch[1];",
-													"    const id = idMatch[1];",
-													"    ",
-													"    pm.collectionVariables.set(\"username\", name);",
-													"    pm.collectionVariables.set(\"userID\", id);",
-													"}",
-													"",
-													"// Define the request configuration",
-													"const getRequestConfig = {",
-													"    method: 'GET',",
-													"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
-													"};",
-													"",
-													"// Send the GET request",
-													"pm.sendRequest(getRequestConfig,  (err, response) => {",
-													"    console.log(response.json());",
-													"    if (err) {",
-													"        console.error(err);",
-													"        pm.test(\"Request failed\", function () {",
-													"            pm.expect.fail(\"GET request failed\");",
-													"        });",
-													"    } else {",
-													"        // Validate the response",
-													"        pm.test('response should be okay to process', () => {",
-													"        pm.expect(response).to.have.property('code', 200);});",
-													"",
-													"        var body = response.json();",
-													"        ",
-													"        pm.test(\"User role is ADMIN\", function () {",
-													"            var responseData = response.json();",
-													"        pm.expect(responseData.authorities).to.include('ROLE_ADMIN', \"Expected user role to be 'ROLE_ADMIN', but found '\" + responseData.authorities + \"'\");",
-													"    ",
-													"        });",
-													"    }",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "6655a866-6fbf-479a-b646-015d75209a99",
-												"exec": [
-													"var randomFirstName = pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
-													"randomFirstName = \"admin\" + randomFirstName;",
-													"pm.collectionVariables.set(\"username\", randomFirstName);",
-													"",
-													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
-													"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
-													"",
-													"const min = 100;",
-													"const max = 157;",
-													"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
-													"",
-													"// Set the random number as an environment variable",
-													"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "328ee7cd-24e9-4030-b737-a6e0fbd8ec2a",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{  \"authorities\": [\n    \"ROLE_ADMIN\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": "{{baseurl}}/api/users/"
-									},
-									"response": []
-								},
-								{
 									"name": "Get user by ID",
 									"event": [
 										{
@@ -482,6 +381,214 @@
 												}
 											]
 										}
+									},
+									"response": []
+								},
+								{
+									"name": "Authenticate user",
+									"id": "2079ab8d-ad9c-4ce3-b639-a4eb6dde1f38",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "username",
+													"value": "{{username}}",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "{{password}}",
+													"type": "text"
+												}
+											]
+										},
+										"url": "{{baseurl}}/authenticate"
+									},
+									"response": []
+								},
+								{
+									"name": "Upgrade user's personal profile Copy",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "26f12aac-2f9a-4bb7-a454-0061978847d8",
+												"exec": [
+													"// To edit your own profile user must be authenticated",
+													"// Define the form data",
+													"const formData = {",
+													"    username: pm.collectionVariables.get(\"username\"),",
+													"",
+													"    password: pm.collectionVariables.get(\"password\")",
+													"};",
+													"    console.log(formData);",
+													"",
+													"// Define the POST request configuration",
+													"const postRequestConfig = {",
+													"    method: 'POST',",
+													"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
+													"    header: 'Content-Type: application/x-www-form-urlencoded',",
+													"    body: {",
+													"        mode: 'formdata',",
+													"        formdata: [",
+													"            { key: 'username', value: formData.username },",
+													"            { key: 'password', value: formData.password }",
+													"        ]",
+													"    }",
+													"};",
+													"",
+													"// Send the POST request",
+													"pm.sendRequest(postRequestConfig, function (err, response) {",
+													"    console.log(response);",
+													"    if (err) {",
+													"        console.error(err);",
+													"        pm.test(\"Request failed\", function () {",
+													"            pm.expect.fail(\"POST request failed\");",
+													"        });",
+													"    } ",
+													"});",
+													"",
+													"",
+													"",
+													"// Generate a random birth date within a desired range",
+													"function getRandomDate(minYear, maxYear) {",
+													"    const year = Math.floor(Math.random() * (maxYear - minYear + 1)) + minYear;",
+													"    const month = Math.floor(Math.random() * 12) + 1; // Months are 1-12",
+													"    const day = Math.floor(Math.random() * 31) + 1; // Days are 1-31",
+													"",
+													"    // Ensure the day and month are formatted with leading zeros if needed",
+													"    const formattedMonth = month.toString().padStart(2, '0');",
+													"    const formattedDay = day.toString().padStart(2, '0');",
+													"",
+													"    return `${year}-${formattedMonth}-${formattedDay}`;",
+													"}",
+													"",
+													"// Define the desired birth date range (adjust as needed)",
+													"const minBirthYear = 1930;",
+													"const maxBirthYear = 2008;",
+													"",
+													"// Generate a random birth date within the specified range",
+													"const randomBirthDate = getRandomDate(minBirthYear, maxBirthYear);",
+													"",
+													"// Set the random birth date as a collection variable",
+													"pm.collectionVariables.set(\"user_birthDate\", randomBirthDate);",
+													"",
+													"",
+													"",
+													"// Set random first and last name",
+													"pm.collectionVariables.set(\"user_firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+													"pm.collectionVariables.set(\"user_lastName\", pm.variables.replaceIn('{{$randomLastName}}'));",
+													"",
+													"// Set random city",
+													"// Parse the CSV content from the environment variable",
+													"const cityCSV = pm.collectionVariables.get(\"cityData\").split('\\n');",
+													"const randomIndex = Math.floor(Math.random() * cityCSV.length);",
+													"",
+													"// Select a random city and its ID",
+													"const [cityId, cityName] = cityCSV[randomIndex].split(',');",
+													"",
+													"",
+													"// Set the \"city\" and \"id\" variables in the request environment",
+													"pm.collectionVariables.set(\"city_name\", cityName.trim());",
+													"pm.collectionVariables.set(\"city_id\", parseInt(cityId));",
+													"",
+													"",
+													"// Set either MALE or FEMALE as sex",
+													"const sexes = [\"MALE\", \"FEMALE\"];",
+													"",
+													"// Generate a random index to select a value",
+													"const index = Math.floor(Math.random() * sexes.length);",
+													"",
+													"// Get the random sex value",
+													"const randomSex = sexes[index];",
+													"",
+													"// Set the random sex as a collection variable",
+													"pm.collectionVariables.set(\"user_sex\", randomSex);",
+													"",
+													"// Set picture privacy",
+													"// Generate a random boolean value (true or false)",
+													"const randomBoolean = Math.random() < 0.5;",
+													"",
+													"// Set the random boolean value as a collection variable",
+													"pm.collectionVariables.set(\"user_picturePrivacy\", randomBoolean);",
+													"",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "f0f30894-cf31-4435-ab6d-68a4b692eb5b",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, 'Expected 200');",
+													"});",
+													"",
+													"pm.test(\"Check birthYear in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.birthYear).to.equal(pm.collectionVariables.get(\"user_birthDate\"));",
+													"});",
+													"",
+													"pm.test(\"Check firstName in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.firstName).to.equal(pm.collectionVariables.get(\"user_firstName\"));",
+													"});",
+													"",
+													"pm.test(\"Check lastName in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.lastName).to.equal(pm.collectionVariables.get(\"user_lastName\"));",
+													"});",
+													"",
+													"pm.test(\"Check picturePrivacy in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    const expectedPicturePrivacy = pm.collectionVariables.get(\"user_picturePrivacy\"); ",
+													"",
+													"    pm.expect(responseJson.picturePrivacy).to.equal(expectedPicturePrivacy);",
+													"});",
+													"",
+													"pm.test(\"Check sex in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.sex).to.equal(pm.collectionVariables.get(\"user_sex\"));",
+													"});",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "c97eaefd-1dde-4f21-8a23-2a4c6e363f5c",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"birthYear\": \"{{user_birthDate}}\",\n  \"firstName\": \"{{user_firstName}}\",\n  \"lastName\": \"{{user_lastName}}\",\n  \"location\": {\n    \"city\": {\n      \"city\": \"{{city_name}}\",\n      \"country\": {},\n      \"id\": {{city_id}}\n    }\n    ,\n    \"id\": 1\n  },\n  \"picturePrivacy\": {{user_picturePrivacy}},\n  \"sex\": \"{{user_sex}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseurl}}/api/users/auth/{{userID}}/personal"
 									},
 									"response": []
 								}

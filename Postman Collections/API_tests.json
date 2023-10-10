@@ -225,7 +225,7 @@
 									"formdata": [
 										{
 											"key": "username",
-											"value": "{{username}",
+											"value": "{{username}}",
 											"type": "text"
 										},
 										{
@@ -290,7 +290,7 @@
 									"formdata": []
 								},
 								"url": {
-									"raw": "{{baseurl}}/api/users/auth/{{userID}}?principal={{user_name}}",
+									"raw": "{{baseurl}}/api/users/auth/{{userID}}?principal={{username}}",
 									"host": [
 										"{{baseurl}}"
 									],
@@ -303,7 +303,7 @@
 									"query": [
 										{
 											"key": "principal",
-											"value": "{{user_name}}"
+											"value": "{{username}}"
 										}
 									]
 								}
@@ -532,8 +532,44 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "4066802b-4013-445c-acef-7649470aa0e1",
+										"id": "26f12aac-2f9a-4bb7-a454-0061978847d8",
 										"exec": [
+											"// To edit your own profile user must be authenticated",
+											"// Define the form data",
+											"const formData = {",
+											"    username: pm.collectionVariables.get(\"username\"),",
+											"    password: pm.collectionVariables.get(\"password\")",
+											"};",
+											"",
+											"// Define the POST request configuration",
+											"const postRequestConfig = {",
+											"    method: 'POST',",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',",
+											"    body: {",
+											"        mode: 'urlencoded',",
+											"        urlencoded: formData",
+											"    }",
+											"};",
+											"",
+											"// Send the POST request",
+											"pm.sendRequest(postRequestConfig, function (err, response) {",
+											"    console.log(response);",
+											"    if (err) {",
+											"        console.error(err);",
+											"        pm.test(\"Request failed\", function () {",
+											"            pm.expect.fail(\"POST request failed\");",
+											"        });",
+											"    } else {",
+											"        // Validate the response for a successful POST request",
+											"        pm.test(\"Status code is 200 OK\", function () {",
+											"            pm.response.to.have.status(200);",
+											"        });",
+											"    }",
+											"});",
+											"",
+											"",
+											"",
 											"// Generate a random birth date within a desired range",
 											"function getRandomDate(minYear, maxYear) {",
 											"    const year = Math.floor(Math.random() * (maxYear - minYear + 1)) + minYear;",
@@ -605,7 +641,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "81d08878-f7ea-484c-bb72-7eef3151db56",
+										"id": "f0f30894-cf31-4435-ab6d-68a4b692eb5b",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",

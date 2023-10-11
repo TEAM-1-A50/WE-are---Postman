@@ -385,37 +385,6 @@
 									"response": []
 								},
 								{
-									"name": "Authenticate user",
-									"id": "2079ab8d-ad9c-4ce3-b639-a4eb6dde1f38",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "noauth"
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "username",
-													"value": "{{username}}",
-													"type": "text"
-												},
-												{
-													"key": "password",
-													"value": "{{password}}",
-													"type": "text"
-												}
-											]
-										},
-										"url": "{{baseurl}}/authenticate"
-									},
-									"response": []
-								},
-								{
 									"name": "Upgrade user's personal profile Copy",
 									"event": [
 										{
@@ -899,37 +868,6 @@
 											}
 										},
 										"url": "{{baseurl}}/api/users/"
-									},
-									"response": []
-								},
-								{
-									"name": "Authenticate user",
-									"id": "1ff9409b-4c06-467c-8c54-022debb82a8f",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "noauth"
-										},
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "username",
-													"value": "{{username}}",
-													"type": "text"
-												},
-												{
-													"key": "password",
-													"value": "{{password}}",
-													"type": "text"
-												}
-											]
-										},
-										"url": "{{baseurl}}/authenticate"
 									},
 									"response": []
 								},
@@ -1689,6 +1627,37 @@
 				}
 			],
 			"id": "ddf9e4ed-713c-4209-b369-abf21b1fbee3"
+		},
+		{
+			"name": "Authenticate user",
+			"id": "2079ab8d-ad9c-4ce3-b639-a4eb6dde1f38",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{baseurl}}/authenticate"
+			},
+			"response": []
 		}
 	],
 	"auth": {

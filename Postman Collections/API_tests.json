@@ -99,7 +99,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+											"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1028,7 +1028,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"availability\": 3,\n  \"category\": {\n    \"id\": 160, \n    \"name\": \"Freelancer\"\n  },\n  \"id\": 0,\n  \"skill1\": \"cook\",\n  \"skill2\": \"clean\",\n  \"skill3\": \"vacuum\",\n  \"skill4\": \"dust\",\n  \"skill5\": \"wash\",\n  \"skills\":[\"more\", \"and more\"]\n}",
+											"raw": "{\n  \"availability\": 3,\n  \"category\": {\n    \"id\": 103, \n    \"name\": \"Author\"\n  },\n  \"id\": 0,\n  \"skill1\": \"cook\",\n  \"skill2\": \"clean\",\n  \"skill3\": \"vacuum\",\n  \"skill4\": \"dust\",\n  \"skill5\": \"wash\",\n  \"skills\":[\"more\", \"and more\"]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1484,7 +1484,7 @@
 							"response": []
 						},
 						{
-							"name": "Get connection request by ID Copy",
+							"name": "Get connection request by ID",
 							"event": [
 								{
 									"listen": "test",

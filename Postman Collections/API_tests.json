@@ -822,7 +822,7 @@
 									"response": []
 								},
 								{
-									"name": "Upgrade user's personal profile",
+									"name": "Update user's personal profile",
 									"event": [
 										{
 											"listen": "prerequest",
@@ -999,7 +999,7 @@
 									"response": []
 								},
 								{
-									"name": "Upgrade user's expertise profile",
+									"name": "Update user's expertise profile",
 									"event": [
 										{
 											"listen": "prerequest",

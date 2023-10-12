@@ -116,10 +116,10 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
+												"id": "3a399a5f-5eb9-4ae9-b658-c9083123173c",
 												"exec": [
 													"pm.test(\"Status code is not 200\", function () {",
-													"    pm.response.to.not.have.status(200);",
+													"    pm.response.to.have.status(400);",
 													"});",
 													"",
 													""
@@ -130,7 +130,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "6655a866-6fbf-479a-b646-015d75209a99",
+												"id": "83d2fb0d-a130-42c9-b897-94afad3b6ac1",
 												"exec": [
 													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -157,7 +157,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
+											"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"

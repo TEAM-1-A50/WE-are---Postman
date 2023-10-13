@@ -345,7 +345,7 @@
 							"name": "Get user by ID, name or expertise",
 							"item": [
 								{
-									"name": "Register user Copy",
+									"name": "Register user",
 									"event": [
 										{
 											"listen": "test",
@@ -434,102 +434,6 @@
 										}
 									],
 									"id": "7c53fd8d-8ef6-42d0-9975-93d0037b80bc",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{  \"authorities\": [\n    \"ROLE_USER\"\n  ],\n      \"category\": {\n    \"id\": {{randomNumber}}\n  },\n  \"confirmPassword\": \"{{password}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"username\": \"{{username}}\"\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": "{{baseurl}}/api/users/"
-									},
-									"response": []
-								},
-								{
-									"name": "Register user",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "d3d43eec-cca6-4aa3-a26d-4fd540be6aa6",
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
-													"});",
-													"",
-													"",
-													"const nameMatch = responseBody.match(/name (\\w+)/);",
-													"const idMatch = responseBody.match(/id (\\d+)/);",
-													"",
-													"// Check if the matches were found and set them as collection variables",
-													"if (nameMatch && idMatch) {",
-													"    const name = nameMatch[1];",
-													"    const id = idMatch[1];",
-													"    ",
-													"    pm.collectionVariables.set(\"username\", name);",
-													"    pm.collectionVariables.set(\"userID\", id);",
-													"}",
-													"",
-													"// Define the request configuration",
-													"const getRequestConfig = {",
-													"    method: 'GET',",
-													"    url: `${pm.collectionVariables.get('baseurl')}/api/users/auth/${pm.collectionVariables.get('userID')}?principal=${pm.collectionVariables.get('username')}`,",
-													"};",
-													"",
-													"// Send the GET request",
-													"pm.sendRequest(getRequestConfig,  (err, response) => {",
-													"    console.log(response.json());",
-													"    if (err) {",
-													"        console.error(err);",
-													"        pm.test(\"Request failed\", function () {",
-													"            pm.expect.fail(\"GET request failed\");",
-													"        });",
-													"    } else {",
-													"        // Validate the response",
-													"        pm.test('response should be okay to process', () => {",
-													"        pm.expect(response).to.have.property('code', 200);});",
-													"        ",
-													"        pm.test(\"User role is USER\", function () {",
-													"            var responseData = response.json();",
-													"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
-													"    ",
-													"        });",
-													"    }",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "6655a866-6fbf-479a-b646-015d75209a99",
-												"exec": [
-													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
-													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
-													"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'));",
-													"",
-													"const min = 100;",
-													"const max = 157;",
-													"const randomNumForCategory = Math.floor(Math.random() * (max - min + 1)) + min;",
-													"",
-													"// Set the random number as an environment variable",
-													"pm.collectionVariables.set(\"randomNumber\", randomNumForCategory);",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "8cd3500e-7390-4df9-b7ad-85d26ee08e58",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -877,9 +781,22 @@
 													"        // Validate the response",
 													"        pm.test('response should be okay to process', () => {",
 													"        pm.expect(response).to.have.property('code', 200);});",
+													"",
+													"        var responseData = response.json();",
+													"        var expectedUsername = pm.collectionVariables.get(\"username\");",
+													"        var expectedUserID = pm.collectionVariables.get(\"userID\");",
+													"",
+													"        // Check if the expected username matches the response username",
+													"        pm.test(\"Usernames should match\", function () {",
+													"        pm.expect(responseData.username).to.eql(expectedUsername, \"Username mismatch. Expected: \" + expectedUsername + \", Actual: \" + responseData.username);",
+													"        });",
+													"",
+													"        // Check if the expected username matches the response id",
+													"        pm.test(\"IDs should match\", function () {",
+													"        pm.expect(responseData.id.toString()).to.eql(expectedUserID,  \"ID mismatch. Expected: \" + expectedUserID + \", Actual: \" + responseData.id);",
+													"});",
 													"        ",
 													"        pm.test(\"User role is USER\", function () {",
-													"            var responseData = response.json();",
 													"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
 													"    ",
 													"        });",
@@ -910,7 +827,7 @@
 											}
 										}
 									],
-									"id": "58d6e6bb-d39d-4cfe-9813-39238c4d2cd2",
+									"id": "e5deefea-e7d6-4410-8e2a-2c848a317176",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -1238,9 +1155,22 @@
 											"        // Validate the response",
 											"        pm.test('response should be okay to process', () => {",
 											"        pm.expect(response).to.have.property('code', 200);});",
+											"",
+											"        var responseData = response.json();",
+											"        var expectedUsername = pm.collectionVariables.get(\"username\");",
+											"        var expectedUserID = pm.collectionVariables.get(\"userID\");",
+											"",
+											"        // Check if the expected username matches the response username",
+											"        pm.test(\"Usernames should match\", function () {",
+											"        pm.expect(responseData.username).to.eql(expectedUsername, \"Username mismatch. Expected: \" + expectedUsername + \", Actual: \" + responseData.username);",
+											"        });",
+											"",
+											"        // Check if the expected username matches the response id",
+											"        pm.test(\"IDs should match\", function () {",
+											"        pm.expect(responseData.id.toString()).to.eql(expectedUserID,  \"ID mismatch. Expected: \" + expectedUserID + \", Actual: \" + responseData.id);",
+											"});",
 											"        ",
 											"        pm.test(\"User role is USER\", function () {",
-											"            var responseData = response.json();",
 											"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
 											"    ",
 											"        });",
@@ -1379,9 +1309,22 @@
 											"        // Validate the response",
 											"        pm.test('response should be okay to process', () => {",
 											"        pm.expect(response).to.have.property('code', 200);});",
+											"",
+											"        var responseData = response.json();",
+											"        var expectedUsername = pm.collectionVariables.get(\"username\");",
+											"        var expectedUserID = pm.collectionVariables.get(\"userID\");",
+											"",
+											"        // Check if the expected username matches the response username",
+											"        pm.test(\"Usernames should match\", function () {",
+											"        pm.expect(responseData.username).to.eql(expectedUsername, \"Username mismatch. Expected: \" + expectedUsername + \", Actual: \" + responseData.username);",
+											"        });",
+											"",
+											"        // Check if the expected username matches the response id",
+											"        pm.test(\"IDs should match\", function () {",
+											"        pm.expect(responseData.id.toString()).to.eql(expectedUserID,  \"ID mismatch. Expected: \" + expectedUserID + \", Actual: \" + responseData.id);",
+											"});",
 											"        ",
 											"        pm.test(\"User role is USER\", function () {",
-											"            var responseData = response.json();",
 											"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
 											"    ",
 											"        });",

@@ -1806,42 +1806,6 @@
 						}
 					],
 					"id": "bcf16cdd-0e47-402c-b3e0-6e4d1befc5ae"
-				},
-				{
-					"name": "New Request",
-					"id": "f56255af-072a-48de-a488-d08cca50b620",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "нова",
-							"host": [
-								"нова"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"id": "5ff1e1cd-1dad-4762-a4c2-18e1d2bdbd76",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "whatever",
-							"host": [
-								"whatever"
-							]
-						}
-					},
-					"response": []
 				}
 			],
 			"id": "14b226eb-97a6-4c79-8e77-b597fcac581e"

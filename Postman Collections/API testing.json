@@ -1,0 +1,795 @@
+{
+	"info": {
+		"_postman_id": "2a66c7f4-cbce-4f5c-84ac-9d9949ca7862",
+		"name": "API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "28750816-2a66c7f4-cbce-4f5c-84ac-9d9949ca7862"
+	},
+	"item": [
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Authenticate user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.collectionVariables.set(\"authUser\", pm.request)"
+										],
+										"type": "text/javascript",
+										"id": "e9d378f7-891e-48de-9d78-63f0a0ffc750"
+									}
+								}
+							],
+							"id": "c290391d-c4f4-4c10-9ca4-962ad9946fbd",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{usertest1}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password1}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseurl}}/authenticate",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"authenticate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All posts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"var jsonData = pm.response.json();\r",
+											"console.log(jsonData);\r",
+											"\r",
+											"// Access the response JSON directly\r",
+											"var responseJson = pm.response.json();\r",
+											"\r",
+											"// Function to extract the date as a JavaScript Date object for comparison\r",
+											"function extractDate(post) {\r",
+											"    return new Date(post.date);\r",
+											"}\r",
+											"\r",
+											"// Find the post with the newest date\r",
+											"var newestPost = responseJson.reduce(function (maxPost, post) {\r",
+											"    return extractDate(post) > extractDate(maxPost) ? post : maxPost;\r",
+											"}, responseJson[0]);\r",
+											"\r",
+											"// Extract the ID of the newest post\r",
+											"var newestPostId = newestPost.postId;\r",
+											"\r",
+											"// Log the ID of the newest post\r",
+											"console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"// You can also set a Postman environment variable with the result\r",
+											"pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"\r",
+											"pm.collectionVariables.set(\"getPost\", pm.request);\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "0728d671-7e96-4316-b39e-a04180905f8d"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest(pm.collectionVariables.get(\"authUser\"));\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "b5cee3db-65a4-4aaa-8d03-c02cabb27269"
+									}
+								}
+							],
+							"id": "c497fe63-e7d8-49c7-9db2-70d1a353d840",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/post/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Id in response\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.postId).to.not.null;\r",
+											"});\r",
+											"pm.test(\"Content in response\", function () {\r",
+											"    var postcontent= pm.collectionVariables.get('hundred_symbols');\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.content).to.equal(postcontent);\r",
+											"});\r",
+											"var jsonData = pm.response.json();\r",
+											"console.log(jsonData);\r",
+											"\r",
+											"// Access the response JSON directly\r",
+											"var responseJson = pm.response.json();\r",
+											"\r",
+											"// Extract the ID of the newest post\r",
+											"var newestPostId = responseJson.postId;\r",
+											"\r",
+											"// Log the ID of the newest post\r",
+											"console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"// You can also set a Postman environment variable with the result\r",
+											"pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"\r",
+											"\r",
+											"pm.collectionVariables.set(\"postCreate\", pm.request);\r",
+											"\r",
+											"\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?postId=${newestPostId}`,\r",
+											"    method: 'DELETE',\r",
+											"    header:{\r",
+											"        'Content-Type':'application/json',\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "f5660433-a9f6-4d5f-adcb-a7170589b18a"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.sendRequest(pm.collectionVariables.get(\"authUser\"));\r",
+											"\r",
+											"\r",
+											"// create 100 symbols message\r",
+											"const hundredSymbols = Array(34).fill('xo ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols', hundredSymbols);\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "68c1cc24-ac0c-4105-9db5-830ed23589c5"
+									}
+								}
+							],
+							"id": "13ed8108-1261-41c3-9e83-747ef986ef6f",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"content\": \"{{hundred_symbols}}\",\r\n  \"picture\": \"https://content.api.news/v3/images/bin/eb46d3099a5f3b45b4b1b0f4deae1d0a\",\r\n  \"public\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/post/auth/creator",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										"auth",
+										"creator"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Like post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('usertest1'),\r",
+											"    password: pm.collectionVariables.get('password1')\r",
+											"};\r",
+											"    console.log(formData);\r",
+											"\r",
+											"// Define the POST request configuration\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"id": "9c205f2e-f448-4866-8c70-6fe93572d161"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Id in response\", function () {\r",
+											"            pm.expect(jsonData.postId).to.not.null;\r",
+											"        });\r",
+											"pm.test(\"User expected to have liked the comment one from the test\", function() {\r",
+											"    pm.expect(jsonData.likes[0].username).to.equal(pm.collectionVariables.get('usertest1'))\r",
+											"});\r",
+											"\r",
+											"var newestPostId = pm.collectionVariables.get('newestPostId');\r",
+											"pm.sendRequest({\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?postId=${newestPostId}`,\r",
+											"    method: 'DELETE',\r",
+											"    header:{\r",
+											"        'Content-Type':'application/json',\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "7068b0f0-c3cb-46d4-9a81-edbf0826a1f5"
+									}
+								}
+							],
+							"id": "3e1756f5-e180-4213-9794-5ff8ac740e5f",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/post/auth/likesUp?postId={{newestPostId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										"auth",
+										"likesUp"
+									],
+									"query": [
+										{
+											"key": "postId",
+											"value": "{{newestPostId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('usertest1'),\r",
+											"    password: pm.collectionVariables.get('password1')\r",
+											"};\r",
+											"    console.log(formData);\r",
+											"\r",
+											"// Define the POST request configuration\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"// create 100 symbols message\r",
+											"const hundredSymbols = Array(14).fill('edited ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols_edited', hundredSymbols);"
+										],
+										"type": "text/javascript",
+										"id": "09d5c174-8104-4186-b704-ac36bd3b7910"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"getPost\"), function (response) {\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.expect(response).to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    if (response && response.json && typeof response.json === 'function') {\r",
+											"        var jsonData = response.json();\r",
+											"        pm.test(\"Id in response\", function () {\r",
+											"            pm.expect(jsonData.postId).to.not.null;\r",
+											"        });\r",
+											"\r",
+											"        var postcontent = pm.collectionVariables.get('hundred_symbols');\r",
+											"        pm.test(\"Content in response\", function () {\r",
+											"            pm.expect(jsonData.content).to.equal(postcontent);\r",
+											"        });\r",
+											"    } else {\r",
+											"        pm.test(\"Response body is empty\", function () {\r",
+											"            pm.expect.fail(\"Response body is empty\");\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"\r",
+											"var newestPostId = pm.collectionVariables.get('newestPostId');\r",
+											"pm.sendRequest({\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?postId=${newestPostId}`,\r",
+											"    method: 'DELETE',\r",
+											"    header:{\r",
+											"        'Content-Type':'application/json',\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "3b43aef3-474c-47be-82ed-69bfd376b155"
+									}
+								}
+							],
+							"id": "1b6c0437-e007-4254-a4aa-84227cd61e98",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"content\": \"{{hundred_symbols_edited}}\",\r\n  \"picture\": \"https://content.api.news/v3/images/bin/eb46d3099a5f3b45b4b1b0f4deae1d0a\",\r\n  \"public\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/post/auth/editor?name={{usertest1}}&postId={{newestPostId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										"auth",
+										"editor"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "{{usertest1}}"
+										},
+										{
+											"key": "postId",
+											"value": "{{newestPostId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('usertest1'),\r",
+											"    password: pm.collectionVariables.get('password1')\r",
+											"};\r",
+											"    console.log(formData);\r",
+											"\r",
+											"// Define the POST request configuration\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "dc54e65f-9a5b-4da4-8640-4669aadc6914"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.collectionVariables.set(\"deletePost\", pm.request)\r",
+											""
+										],
+										"type": "text/javascript",
+										"id": "1950473f-647f-464c-9632-30b2d4ea0bd6"
+									}
+								}
+							],
+							"id": "6d13468a-43b6-4386-b6fb-0994d7ebb5a1",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/post/auth/manager?postId={{newestPostId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										"auth",
+										"manager"
+									],
+									"query": [
+										{
+											"key": "postId",
+											"value": "{{newestPostId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "4687adbf-2158-4905-a92d-cf287e0c048d"
+				}
+			],
+			"id": "2df523b2-00eb-4a72-83a9-ecf43da2c7f4"
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "pass123*A",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "adminOne",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "48cce2b6-3b9d-4111-8a37-1b577f2341a7"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				],
+				"id": "f35b7f43-2e4b-4e78-a1db-cc14a0c40109"
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "0dc31c42-9f2f-4277-8c3e-7e47b05a4493",
+			"key": "password",
+			"value": "123456*A"
+		},
+		{
+			"id": "de3fd4ee-5f93-4387-80a6-74b674180a8c",
+			"key": "baseurl",
+			"value": "http://localhost:8081"
+		},
+		{
+			"id": "e4c287b7-054d-4e63-a16f-a7b110bc506b",
+			"key": "email",
+			"value": ""
+		},
+		{
+			"id": "a333c548-5eb5-48fb-a135-19733d9d11ee",
+			"key": "userID",
+			"value": "41"
+		},
+		{
+			"id": "b6476459-f5bd-4af5-b777-09645d75ae52",
+			"key": "randomNumber",
+			"value": ""
+		},
+		{
+			"id": "5d6cb0b0-b155-4e62-a60f-e1c484efdaff",
+			"key": "userExpertise",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "baea67b7-28b0-4741-82b6-668460a4e9b4",
+			"key": "user_firstName",
+			"value": ""
+		},
+		{
+			"id": "2aa5f6cc-3062-471b-9582-ca74fd657cd6",
+			"key": "cityData",
+			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
+			"type": "string"
+		},
+		{
+			"id": "06826b1a-c5cc-46c0-a8c0-a79ba4499818",
+			"key": "user_lastName",
+			"value": ""
+		},
+		{
+			"id": "93324aeb-15a3-4881-9acf-0a9174b4e1e4",
+			"key": "city_name",
+			"value": ""
+		},
+		{
+			"id": "84eb6aec-7264-423b-a649-33d0d4222722",
+			"key": "city_id",
+			"value": ""
+		},
+		{
+			"id": "16f5b976-da75-45ca-a866-0ccefc863925",
+			"key": "user_birthDate",
+			"value": ""
+		},
+		{
+			"id": "f30d204f-f7ff-4bc7-81c8-77b601e027b1",
+			"key": "user_fullName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "c6116a6d-26ba-47cf-926d-04e48b43a3a7",
+			"key": "user_sex",
+			"value": ""
+		},
+		{
+			"id": "2c15b474-80ee-414b-baf1-3dd5551bd487",
+			"key": "user_picturePrivacy",
+			"value": ""
+		},
+		{
+			"id": "b7c9f237-e59a-450b-af31-38ecf4917c27",
+			"key": "username",
+			"value": ""
+		},
+		{
+			"id": "08a4f8aa-9c1d-4d29-bca3-0ebb28d13486",
+			"key": "usertest1",
+			"value": "testipthree",
+			"type": "string"
+		},
+		{
+			"id": "9587b4fa-6346-4a6a-8d73-24419d84d180",
+			"key": "password1",
+			"value": "Testipthree*1",
+			"type": "string"
+		},
+		{
+			"id": "76cc3c4e-976f-4801-b735-2480998512a0",
+			"key": "hundred_symbols",
+			"value": ""
+		},
+		{
+			"id": "d00da4b3-9120-43da-9cb4-3d72229dcfce",
+			"key": "hundred_symbols_edited",
+			"value": ""
+		},
+		{
+			"id": "86057172-10e5-4458-a8a0-17b42eb914a1",
+			"key": "authUser",
+			"value": ""
+		},
+		{
+			"id": "0039a49d-ea32-44f5-833b-e87c341210c4",
+			"key": "newestPostId",
+			"value": ""
+		},
+		{
+			"id": "1ba0895a-eb8f-402e-9a26-d5a055a43607",
+			"key": "getPost",
+			"value": ""
+		},
+		{
+			"id": "e1894758-b0a4-4f53-957d-2d40d4fe54b4",
+			"key": "postCreate",
+			"value": ""
+		},
+		{
+			"id": "712ae738-9289-4601-99fd-ae75e562c012",
+			"key": "deletePost",
+			"value": ""
+		}
+	]
+}

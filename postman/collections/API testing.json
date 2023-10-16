@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "73ca175e-13d3-4659-9aa0-2984a11fa5d0",
+		"_postman_id": "828f1354-2874-474d-ae81-f8f1a6f32ff1",
 		"name": "API testing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_uid": "28750816-73ca175e-13d3-4659-9aa0-2984a11fa5d0"
+		"_uid": "3954983-828f1354-2874-474d-ae81-f8f1a6f32ff1"
 	},
 	"item": [
 		{
@@ -21,7 +21,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "bbbaaf4b-5ead-4b09-9a27-3a67ac48dbf1",
+												"id": "795d3c36-efa1-43bb-83f0-afe8690cc3ff",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -86,7 +86,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "12d4be79-0b5c-4a28-83a5-179b8b36d9f7",
+												"id": "c67b5d2a-f8e9-458a-9823-08e3b1eb55c0",
 												"exec": [
 													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -104,7 +104,7 @@
 											}
 										}
 									],
-									"id": "005da486-72cd-461b-a955-9b35899482fa",
+									"id": "3699e71d-9394-4eed-9f31-c75add28ab7f",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -140,7 +140,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "9e6958ac-123f-4443-b2bd-ad8221f60893",
+												"id": "79b78466-e7c2-4923-911c-240d8b08db53",
 												"exec": [
 													"pm.test(\"Status code is not 200\", function () {",
 													"    pm.response.to.have.status(400);",
@@ -154,7 +154,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "1e0ff904-6b52-47ed-82fe-4aa4009650f8",
+												"id": "3bca77ea-1524-4d91-baf1-ff4593b0ed1d",
 												"exec": [
 													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -172,7 +172,7 @@
 											}
 										}
 									],
-									"id": "bbc9bd61-6f77-4975-8a87-15075c1c2658",
+									"id": "f7ba4d6f-6ad0-435d-90c1-13b1a9853acb",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -208,7 +208,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "e0121dfd-401e-4a77-bca2-53028aff01bc",
+												"id": "807a25de-1fc1-4681-b762-9f9135931240",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -273,7 +273,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "05bd44ab-2b08-48da-9ce7-b9cb57ea6698",
+												"id": "9b7343df-fb7c-4df3-bd6d-8b827e7bec87",
 												"exec": [
 													"var randomFirstName = pm.collectionVariables.replaceIn('{{$randomFirstName}}');",
 													"randomFirstName = \"admin\" + randomFirstName;",
@@ -294,7 +294,7 @@
 											}
 										}
 									],
-									"id": "b1463e33-248a-4ee5-848a-8f11e4f92f1e",
+									"id": "7bdda1b9-d563-4ea5-820e-2c14cc210579",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -330,7 +330,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "d8c9010a-037e-4262-a2dc-809991c78cf3",
+												"id": "51b0d5e7-fa67-4f0d-9a23-87070a7557ca",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200);",
@@ -340,7 +340,7 @@
 											}
 										}
 									],
-									"id": "a9b7ac9d-d421-459a-a5a9-dd728874e160",
+									"id": "fd11c6d1-dde5-4049-a901-807b4dcb3a76",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -378,7 +378,7 @@
 									"response": []
 								}
 							],
-							"id": "511a3199-88ac-4efb-8722-67134c4f7bd1"
+							"id": "a85d17af-328c-4489-9897-e9f911d8e474"
 						},
 						{
 							"name": "Get user by ID, name or expertise",
@@ -389,7 +389,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "f051ae21-cad4-4bd2-be13-ca7067de1114",
+												"id": "aafc72de-3784-4b95-a9b5-0039519f2d9e",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -454,7 +454,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "269dc394-88d1-4bdc-a10f-d9d64f0347a2",
+												"id": "44871ad1-9474-49b0-b5a8-3693c880fedc",
 												"exec": [
 													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -472,7 +472,7 @@
 											}
 										}
 									],
-									"id": "27745e48-1a24-4eb7-8224-acb2137d8f19",
+									"id": "119c0c17-6051-4ea3-b97a-687e67006717",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -508,7 +508,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "7f636438-841c-41c4-8e43-3760f73561de",
+												"id": "49952402-de3a-4df9-951a-4dceb9116499",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -538,7 +538,7 @@
 											}
 										}
 									],
-									"id": "88ce0532-6427-47ff-a836-cff39a06a1d9",
+									"id": "74b9aae1-26d8-4ef4-97b8-4d6c7e85d4fd",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -579,7 +579,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "be837163-ced2-4960-ac20-65699ebc8bff",
+												"id": "935af9b9-7f29-4048-881a-1a20978c7943",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -602,7 +602,7 @@
 											}
 										}
 									],
-									"id": "ef572059-31cd-4248-803f-342320428986",
+									"id": "9d867d52-a610-4993-9207-07d5854d8cbd",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -637,7 +637,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "fc6ed520-342d-4429-a723-06dd9fe23e3e",
+												"id": "bf02aa50-ff35-46b9-a149-66ee926f659b",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200);",
@@ -679,7 +679,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "e759ef2d-5234-4d91-ac30-1405a70fc952",
+												"id": "72f4b27a-20b4-4d13-a063-3eb80c7beecb",
 												"exec": [
 													""
 												],
@@ -687,7 +687,7 @@
 											}
 										}
 									],
-									"id": "5dffd3f9-51cf-47ed-b406-3762d5ace97d",
+									"id": "abe41ec2-ef32-454d-9797-4b71f5474238",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -722,7 +722,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "b1c6d422-9faa-4bab-b923-580a29fe5363",
+												"id": "8be59414-87c3-4fd3-a3bf-35141ca14d82",
 												"exec": [
 													"var fullName = pm.collectionVariables.get(\"user_firstName\") + \" \" + pm.collectionVariables.get(\"user_lastName\");",
 													"",
@@ -734,7 +734,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "fca39dda-3539-45d6-a00b-4a9360fafa40",
+												"id": "bd1f14f7-72d5-428e-97e8-2eb2c63e81a3",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200);",
@@ -779,7 +779,7 @@
 											}
 										}
 									],
-									"id": "2a198ad7-03aa-4e15-ad45-d2a1d1647120",
+									"id": "4f192c09-ba71-4661-b5ae-87b2d183b8e4",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -809,7 +809,7 @@
 									"response": []
 								}
 							],
-							"id": "9d655939-e2d7-4545-98e3-5f524700397e"
+							"id": "00d4eab2-80ea-4dc3-b6c2-89ac168b3463"
 						},
 						{
 							"name": "Update user's profile information",
@@ -820,7 +820,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "ec1948c7-3c14-429d-bc32-51b647b97e5e",
+												"id": "1c19a516-3567-4f76-8e29-50d1d7235dc6",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -885,7 +885,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "363369c0-928d-4fce-b1cd-f606cfc0a8c9",
+												"id": "fab716c8-1bdf-4a4c-8b8f-516f7a733f50",
 												"exec": [
 													"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 													"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -903,7 +903,7 @@
 											}
 										}
 									],
-									"id": "0ff1f369-869f-46ce-ab23-cc47fe5bd7ba",
+									"id": "3aed7e64-bbb7-4aaf-a452-4d3023e0ce2e",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -939,7 +939,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "647a14e5-4698-4f61-8836-5e4469b61bcd",
+												"id": "040859f7-7d31-46f5-ba4d-49da902ab6f3",
 												"exec": [
 													"// To edit your own profile user must be authenticated",
 													"// Define the form data",
@@ -1048,7 +1048,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "47d84c93-82c6-43a0-ad3f-273339a75a80",
+												"id": "23cb5061-3de9-40a4-916a-9542837dd14a",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200, 'Expected 200');",
@@ -1087,7 +1087,7 @@
 											}
 										}
 									],
-									"id": "ee74aa16-f3c8-4992-bc71-ceb9513695a8",
+									"id": "b6f788b5-93c6-4ff3-aeae-71bc1c7278a0",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -1128,7 +1128,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
-												"id": "fc00f126-a3c6-4c6f-9ccf-0c526a8233ba",
+												"id": "8cc32b13-0dfe-49f4-9396-006db834c2d5",
 												"exec": [
 													"// // To edit your own profile user must be authenticated",
 													"// // Define the form data",
@@ -1170,7 +1170,7 @@
 										{
 											"listen": "test",
 											"script": {
-												"id": "722ae496-418c-4f4b-87ed-9072c89c06ce",
+												"id": "ffff93f0-3e29-451d-9271-b6092bf21234",
 												"exec": [
 													""
 												],
@@ -1178,7 +1178,7 @@
 											}
 										}
 									],
-									"id": "92430974-8816-4626-bc9c-5a2ea66d08d2",
+									"id": "90e2c070-477f-4053-ac9a-5706e59ae635",
 									"protocolProfileBehavior": {
 										"disableBodyPruning": true
 									},
@@ -1214,10 +1214,10 @@
 									"response": []
 								}
 							],
-							"id": "c412fa76-38ca-4916-9fa1-326c7150ba61"
+							"id": "846209c4-c589-4572-ade7-1a1ba3ea36bb"
 						}
 					],
-					"id": "0c0ff591-7f1c-4ef7-af56-ab511657aa22"
+					"id": "47047faa-0a0e-49a3-a222-0e10b892d020"
 				},
 				{
 					"name": "Connection requests",
@@ -1228,7 +1228,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4069b482-0967-47ff-8ca8-2abc95ab6e66",
+										"id": "976bd049-1850-475a-8d39-80408eaa7e5e",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1293,7 +1293,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "f4430b10-8041-4392-bd4f-911260c97057",
+										"id": "62de87d2-9e02-43aa-9717-f39079810c72",
 										"exec": [
 											"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -1311,7 +1311,7 @@
 									}
 								}
 							],
-							"id": "aed82c9e-0a38-4f51-b6a8-1c375b621e22",
+							"id": "0599acfd-8d37-4fab-abc0-2a642a069c82",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1347,7 +1347,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "2a355f5e-54d0-42eb-bd02-c3a95ebbf0c1",
+										"id": "7ac075f8-2a05-4ced-a25a-a3e579c2866c",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1357,7 +1357,7 @@
 									}
 								}
 							],
-							"id": "131fd708-d66e-4725-9913-82c77b5673d0",
+							"id": "ae8bd8e3-bc19-4e5c-8aba-683022b2a0d3",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1400,7 +1400,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "b5ea0952-b77f-4a84-b301-976f66e68e05",
+										"id": "4f82544f-0118-413c-8087-ee681cc18d6b",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1465,7 +1465,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "e966d1ec-b767-4fe0-8a66-278d75fc2e97",
+										"id": "5439180f-73f6-4f3d-9b49-f7e04e2c5299",
 										"exec": [
 											"pm.collectionVariables.set(\"username\", pm.variables.replaceIn('{{$randomFirstName}}'));",
 											"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'));",
@@ -1483,7 +1483,7 @@
 									}
 								}
 							],
-							"id": "1bb53394-c916-4b9c-a730-3f5b7297e265",
+							"id": "fce62fee-56b4-4c5f-b5b8-5cf676c392fc",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1519,7 +1519,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ca15a42f-9b12-4a46-935e-b9a6023b2420",
+										"id": "7cb97416-e05b-4d48-b28d-df1d98139336",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1543,7 +1543,7 @@
 									}
 								}
 							],
-							"id": "aaeb0a58-56ee-44f5-b39e-8dc709302fad",
+							"id": "48b478ef-06d9-46be-88a6-17284a1a5889",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1579,7 +1579,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "1fc66636-970b-42cc-bae7-4a25c2b485dd",
+										"id": "9b3dd8e4-65aa-4ae3-9464-32e159807a45",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1589,7 +1589,7 @@
 									}
 								}
 							],
-							"id": "72bee17f-1da2-4727-a162-cedaa6b651a3",
+							"id": "8249dc0b-e91a-4aff-9f45-e82154f5b342",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1632,7 +1632,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "15a3bfb1-b1df-45c2-b2aa-2a735be4cba8",
+										"id": "f9c699bf-3ad1-48b0-b9db-b7fc9845242d",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1667,7 +1667,7 @@
 									}
 								}
 							],
-							"id": "a5dc7f4e-51bc-4158-b1b9-65245e931b23",
+							"id": "e6e69ff9-006c-4513-bab1-6a4bf0b2bfe9",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1697,7 +1697,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "488d8297-5d35-436d-8376-454e5676a917",
+										"id": "717a6d6d-582c-4ff4-8f82-50cb3ff32d4e",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1721,7 +1721,7 @@
 									}
 								}
 							],
-							"id": "541c6ba7-3d43-4738-a1eb-80eb4d1695d9",
+							"id": "e99685d7-b2ef-4faa-a38a-3400a2dda0b8",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1757,7 +1757,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5025a169-bae6-4d6b-a4da-6cc09f18250b",
+										"id": "e748b625-15aa-4bec-81a7-6eadbf48049b",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
@@ -1780,7 +1780,7 @@
 									}
 								}
 							],
-							"id": "c6335659-2c91-4b3b-bc26-7890d19c1db7",
+							"id": "1380559a-0fe2-4d5c-9a1f-be59ec4ab5d8",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1805,10 +1805,10 @@
 							"response": []
 						}
 					],
-					"id": "10926ee5-3650-4c11-97b9-c63001a3bcce"
+					"id": "db99221d-581d-40ea-aa44-2ec7d3bf8163"
 				}
 			],
-			"id": "885bf146-9f78-41ac-8fb1-de2951ce9be6"
+			"id": "5dd8f024-d7cd-4cfa-ae27-c67b5f5d0492"
 		},
 		{
 			"name": "Posts",
@@ -1822,18 +1822,18 @@
 								{
 									"listen": "test",
 									"script": {
+										"id": "739210ff-2db0-42d5-8c5c-f91a6ad67a7a",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"pm.collectionVariables.set(\"authUser\", pm.request)"
 										],
-										"type": "text/javascript",
-										"id": "46474370-9660-4897-b53b-8940774c7391"
+										"type": "text/javascript"
 									}
 								}
 							],
-							"id": "0454dfc0-958f-47c3-ac4b-a18998c7c81c",
+							"id": "dc752e9f-ddcc-48ea-8850-1dcdb68a0e2d",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1848,12 +1848,12 @@
 									"formdata": [
 										{
 											"key": "username",
-											"value": "{{usertest1}}",
+											"value": "{{username}}",
 											"type": "text"
 										},
 										{
 											"key": "password",
-											"value": "{{password1}}",
+											"value": "{{password}}",
 											"type": "text"
 										}
 									]
@@ -1909,7 +1909,7 @@
 											""
 										],
 										"type": "text/javascript",
-										"id": "61149595-93a8-44fb-bf0d-82cf1389b74a"
+										"id": "72a21d11-fd49-42d3-b47c-8fbc9266f947"
 									}
 								},
 								{
@@ -1920,11 +1920,11 @@
 											""
 										],
 										"type": "text/javascript",
-										"id": "c18fe18b-f655-4150-8369-17fbdc31e801"
+										"id": "cd5ed8ed-9241-4bcf-957d-1387c839192f"
 									}
 								}
 							],
-							"id": "4cca8429-dedc-42e4-a5dd-c5bedfcacd6e",
+							"id": "fbde64bc-4d2b-4926-afac-7a3cb1515e1e",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2004,7 +2004,7 @@
 											""
 										],
 										"type": "text/javascript",
-										"id": "31998e5e-fae8-4e3e-95ee-34eeff037470"
+										"id": "78981291-2fb2-4aed-a02e-071b441ab0d8"
 									}
 								},
 								{
@@ -2020,11 +2020,11 @@
 											""
 										],
 										"type": "text/javascript",
-										"id": "51f2adfc-33c5-43c8-abd4-35b1439ffb0e"
+										"id": "461edf85-1330-41dd-a559-87893d50f73a"
 									}
 								}
 							],
-							"id": "bf260b70-6f56-456b-b723-13d1e2d9961f",
+							"id": "04d7c401-12c6-433e-adef-a1b384f91a78",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2108,7 +2108,7 @@
 											"});"
 										],
 										"type": "text/javascript",
-										"id": "1ce371fa-7afb-4c56-816f-5718eeb14200"
+										"id": "415c28a5-6700-4c7f-9290-096806e70b07"
 									}
 								},
 								{
@@ -2137,11 +2137,11 @@
 											""
 										],
 										"type": "text/javascript",
-										"id": "a26a9450-7822-4148-840b-aaf837eaa299"
+										"id": "9338bf13-d97a-434a-834e-20f45fb03422"
 									}
 								}
 							],
-							"id": "5ed8f1ff-8000-43e3-866c-df7b9f463df9",
+							"id": "27b24b20-81e9-40b7-adcd-ed57b2fe2dc1",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2227,7 +2227,7 @@
 											"pm.collectionVariables.set('hundred_symbols_edited', hundredSymbols);"
 										],
 										"type": "text/javascript",
-										"id": "d1ff55a9-3604-4e87-a24a-1b980d6f88a1"
+										"id": "4783ab42-2182-4114-842d-0ba275ab44df"
 									}
 								},
 								{
@@ -2273,11 +2273,11 @@
 											""
 										],
 										"type": "text/javascript",
-										"id": "ac97cc44-1ed9-4a15-bb1f-dafcdd972194"
+										"id": "0d1a31b0-2e31-4542-924a-a22b5cf28243"
 									}
 								}
 							],
-							"id": "dfbe7dd3-39ac-4324-9f18-df933bcc31db",
+							"id": "c35d13d9-0459-4621-9095-b488f5dbb400",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2327,7 +2327,7 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"id": "d86cf505-b3d3-46fe-8569-9b93f5a852d4",
+										"id": "c925226a-1d35-4eab-b9a5-2cf686efdc22",
 										"exec": [
 											"\r",
 											"const formData = {\r",
@@ -2379,7 +2379,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "5871111a-ad92-4496-a1c2-507653e9cdae",
+										"id": "c16dd7a8-97fe-49a4-8cd0-cd923e4c91d0",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
@@ -2419,7 +2419,7 @@
 									}
 								}
 							],
-							"id": "202bfcdc-b2fa-4dde-bd32-986268510898",
+							"id": "f62a3441-0403-4a03-afbe-bb2047556de5",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2448,10 +2448,584 @@
 							"response": []
 						}
 					],
-					"id": "13ef1104-68d6-4d81-8060-9a8d730a480a"
+					"id": "49d67ca4-3034-4ae7-9134-5b99e53a5707"
 				}
 			],
-			"id": "b5027404-2d5a-4f40-83e8-e16c70c50fee"
+			"id": "41ecbd79-45ad-4f10-a705-8075aeaf9c45"
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "Find All Comments",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "9a74dde0-d7bf-4942-b879-7c8da9da9990",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "aae52a8b-d608-4a75-b7ea-f7bbe7938dc3",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"let jsonData = pm.response.json();\r",
+											"\r",
+											"let commentsCount = jsonData.length;\r",
+											"console.log(commentsCount)\r",
+											"pm.collectionVariables.set(\"commentsCount\", commentsCount);\r",
+											"pm.collectionVariables.set(\"findAllComments\", pm.request);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "d53fd8f0-f4e0-41b2-a4f1-9c53a5128e53",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/comment",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Comment",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "82c1cea9-0b2c-46aa-b93a-aeec6be6a1f2",
+										"exec": [
+											"// create 100 symbols message\r",
+											"const hundredSymbols = Array(14).fill('comment ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols_comment', hundredSymbols);\r",
+											"\r",
+											"findallComments();\r",
+											"\r",
+											"function findallComments() {pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var commentsCount = responseJson.length;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The current comments count is \" + commentsCount);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
+											"    }\r",
+											"});}"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "b530d083-84e5-41dd-9757-6f41cf03542e",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"console.log(pm.response.json());\r",
+											"\r",
+											"var commentsCountPrevious = pm.collectionVariables.get(\"commentsCount\");\r",
+											"console.log(\"Previous comments count after comment creation: \" + commentsCountPrevious);\r",
+											"\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var commentsCount = responseJson.length;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The new comments count is \" + commentsCount);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setCommentsCommentsCount() {pm.collectionVariables.set(\"commentsCount\", commentsCount);}\r",
+											"        setCommentsCommentsCount();\r",
+											"\r",
+											"        pm.test(\"Comments count is updated\", function () {\r",
+											"            pm.expect(pm.collectionVariables.get(\"previousCommentsCount\") + 1).to.eql(commentsCount);\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											"pm.collectionVariables.set(\"newestCommentId\", pm.response.json().commentId);\r",
+											"pm.collectionVariables.set(\"commentCreate\", pm.request);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "001b6094-05fa-4213-8208-9490922c0860",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"commentId\": 0,\r\n  \"content\": \"{{hundred_symbols_comment}}\",\r\n  \"deletedConfirmed\": true,\r\n  \"postId\": {{newestPostId}},\r\n  \"userId\": {{userID}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/comment/auth/creator",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"auth",
+										"creator"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Comment",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "a58d1519-f7ac-441d-a2c1-bfb5f736278b",
+										"exec": [
+											"const hundredSymbolsEditComment = Array(7).fill('edited comment ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols_edited_comment', hundredSymbolsEditComment);\r",
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('username'),\r",
+											"    password: pm.collectionVariables.get('password')\r",
+											"};\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"authUser\"), function (err, response) {\r",
+											"    createComment();\r",
+											"});\r",
+											"\r",
+											"function createComment() {pm.sendRequest(pm.collectionVariables.get(\"commentCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestCommentId = responseJson.commentId;\r",
+											"\r",
+											"        // Log the ID of; the newest post\r",
+											"        console.log(\"The ID of the comment with the newest date is: \" + newestCommentId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestCommentId\", newestCommentId);}\r",
+											"        \r",
+											"        setNewestCommentId();\r",
+											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
+											"        console.log(pm.collectionVariables.get(\"newestCommentId\"));\r",
+											"    }\r",
+											"});}\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "c1ca5ab6-b623-4d94-899f-6a43745ae9ec",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"getPost\"), function (response) {\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.expect(response).to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"    if (response && response.json && typeof response.json === 'function') {\r",
+											"        var jsonData = response.json();\r",
+											"        pm.test(\"Id in response\", function () {\r",
+											"            pm.expect(jsonData.commentId).to.not.null;\r",
+											"        });\r",
+											"\r",
+											"        var commentContent = pm.collectionVariables.get('hundred_symbols_edited_comment');\r",
+											"        pm.test(\"Content in response\", function () {\r",
+											"            pm.expect(jsonData.content).to.equal(commentContent);\r",
+											"        });\r",
+											"    } else {\r",
+											"        pm.test(\"Response body is empty\", function () {\r",
+											"            pm.expect.fail(\"Response body is empty\");\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"var newestCommentId = pm.collectionVariables.get('newestCommentId');\r",
+											"pm.sendRequest({\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?commentId=${newestCommentId}`,\r",
+											"    method: 'DELETE',\r",
+											"    header:{\r",
+											"        'Content-Type':'application/json',\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "ba189c02-d91d-4bea-ac83-93ae6c237d5d",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/comment/auth/editor?commentId={{newestCommentId}}&content={{hundred_symbols_edited_comment}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"auth",
+										"editor"
+									],
+									"query": [
+										{
+											"key": "commentId",
+											"value": "{{newestCommentId}}"
+										},
+										{
+											"key": "content",
+											"value": "{{hundred_symbols_edited_comment}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Comment",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "11d08056-ef6d-4ec0-bdcf-c78e774c0f6c",
+										"exec": [
+											"\r",
+											"// create 100 symbols message\r",
+											"const hundredSymbols = Array(14).fill('comment ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols_comment', hundredSymbols);\r",
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('username'),\r",
+											"    password: pm.collectionVariables.get('password')\r",
+											"};\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequestConfig, function (err, response) {\r",
+											"    createComment();\r",
+											"    findallComments();\r",
+											"});\r",
+											"\r",
+											"function findallComments() {pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var commentsCount = responseJson.length;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The current comments count is \" + commentsCount);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
+											"    }\r",
+											"});}\r",
+											"\r",
+											"function createComment() {pm.sendRequest(pm.collectionVariables.get(\"commentCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestCommentId = responseJson.commentId;\r",
+											"\r",
+											"        // Log the ID of; the newest post\r",
+											"        console.log(\"The ID of the comment with the newest date is: \" + newestCommentId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestCommentId\", newestCommentId);}\r",
+											"        \r",
+											"        setNewestCommentId();\r",
+											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
+											"        console.log(pm.collectionVariables.get(\"newestCommentId\"));\r",
+											"    }\r",
+											"});}"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "a701451a-6c67-4ed0-8aad-2b69feefdcbd",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"console.log(pm.response.json());\r",
+											"\r",
+											"var commentsCountPrevious = pm.collectionVariables.get(\"commentsCount\");\r",
+											"console.log(\"Previous comments count after comment creation: \" + commentsCountPrevious);\r",
+											"\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var commentsCount = responseJson.length;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The new comments count is \" + commentsCount);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setCommentsCommentsCount() {pm.collectionVariables.set(\"commentsCount\", commentsCount);}\r",
+											"        setCommentsCommentsCount();\r",
+											"\r",
+											"        pm.test(\"Comments count is updated\", function () {\r",
+											"            pm.expect(pm.collectionVariables.get(\"previousCommentsCount\") + 1).to.eql(commentsCount);\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											"pm.collectionVariables.set(\"newestCommentId\", pm.response.json().commentId);\r",
+											"pm.collectionVariables.set(\"commentCreate\", pm.request);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "99ea17a9-0594-4501-916e-b3b3316c992b",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/comment/auth/manager?commentId={{newestCommentId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"auth",
+										"manager"
+									],
+									"query": [
+										{
+											"key": "commentId",
+											"value": "{{newestCommentId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "7b35f670-5cf3-4eef-a543-0e1a45e313a7",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4321a799-52ef-4dac-bc6e-020ce1af5dd7",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									"",
+									"pm.sendRequest(pm.collectionVariables.get(\"registerUser\"), function (err, response) {",
+									"if (err) {",
+									"        console.error(err);",
+									"        // Handle the error if needed",
+									"    } else {",
+									"        var jsonData = response.json();",
+									"        console.log(jsonData.body);",
+									"",
+									"    const formData = {",
+									"    username: pm.collectionVariables.get('username'),",
+									"    password: pm.collectionVariables.get('password')};",
+									"",
+									"// Define the POST request configuration",
+									"const postRequestConfig = {",
+									"    method: 'POST',",
+									"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
+									"    header: 'Content-Type: application/x-www-form-urlencoded',",
+									"    body: {",
+									"        mode: 'formdata',",
+									"        formdata: [",
+									"            { key: 'username', value: formData.username },",
+									"            { key: 'password', value: formData.password }",
+									"        ]",
+									"    }",
+									"};",
+									"",
+									"        pm.sendRequest(postRequestConfig);",
+									"        createPost();",
+									"",
+									"    }",
+									"});",
+									"",
+									"function authenticateUser() {pm.sendRequest(collectionVariables.get(\"authUser\"));}",
+									"",
+									"function createPost() {pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {",
+									"    if (err) {",
+									"        console.error(err);",
+									"        // Handle the error if needed",
+									"    } else {",
+									"        var jsonData = response.json();",
+									"        console.log(jsonData);",
+									"",
+									"        // Access the response JSON directly",
+									"        var responseJson = response.json();",
+									"",
+									"        // Extract the ID of the newest post",
+									"        var newestPostId = responseJson.postId;",
+									"",
+									"        // Log the ID of; the newest post",
+									"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);",
+									"",
+									"        // You can also set a Postman environment variable with the result",
+									"        function setNewestPostId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}",
+									"        function setNewestCommentPostId() {pm.collectionVariables.set(\"commentCreatedPostId\", newestPostId);}",
+									"        setNewestPostId();",
+									"        setNewestCommentPostId();",
+									"    }",
+									"});}",
+									"",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb4b68a2-0dac-4124-9982-30afbbb79d8b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"id": "63959a78-82fd-41f1-96ec-065718483407"
 		}
 	],
 	"auth": {
@@ -2473,7 +3047,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "6d1b1e44-1ffe-4563-bab3-0dc899f7b57f",
+				"id": "a239b4da-6483-4b86-9089-255c11dcebcb",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -2483,7 +3057,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "f7d96c56-f74e-48aa-b998-79a74da9c237",
+				"id": "bbc72c45-3db2-4ed2-bb76-a86483a75368",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -2493,150 +3067,160 @@
 	],
 	"variable": [
 		{
-			"id": "4eb62e01-0bfd-4f2c-89b8-e5a50d0b078f",
+			"id": "924b8d2a-7a7d-4643-9452-85705c49420d",
 			"key": "password",
 			"value": "123456*A"
 		},
 		{
-			"id": "f64645d9-712e-453a-a796-7d71b0c4fc03",
+			"id": "1142876e-d3f5-4d00-b516-b097e7c14455",
 			"key": "baseurl",
 			"value": "http://localhost:8081"
 		},
 		{
-			"id": "38d58158-0552-4b93-b504-8382a7576e47",
+			"id": "f27ac98c-cb92-4307-baaf-035a7a564c64",
 			"key": "email",
 			"value": ""
 		},
 		{
-			"id": "593efc54-f290-40ac-b4bd-f537339fff0a",
+			"id": "396086d5-fa2b-455c-a2fe-efcf8878aa3e",
 			"key": "userID",
 			"value": "41"
 		},
 		{
-			"id": "3002c3fd-6f27-4a41-ae60-974b9c3d1a94",
+			"id": "5241724c-51a3-4fc9-a6f1-0fc40d7f5fcd",
 			"key": "randomNumber",
 			"value": ""
 		},
 		{
-			"id": "67335400-f122-4238-a621-08adbef26bc5",
+			"id": "04a1ae4f-b715-481f-9ef2-6aa62fe9e63f",
 			"key": "userExpertise",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "86796dab-3db6-4cd2-8d20-94de098891fc",
+			"id": "aa0cfff1-0409-40b8-8dff-0d3c642837d3",
 			"key": "user_firstName",
 			"value": ""
 		},
 		{
-			"id": "23da08e4-16eb-4f47-9075-fa716aae3940",
+			"id": "9fb68072-1a81-40a9-9829-3ecdbd8aeedb",
 			"key": "cityData",
 			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
 			"type": "string"
 		},
 		{
-			"id": "767fd281-5c85-4a25-bc14-775f4f532c68",
+			"id": "2e684d5e-fd80-4eed-92ad-9d6937381a1f",
 			"key": "user_lastName",
 			"value": ""
 		},
 		{
-			"id": "189d0ab0-bf6b-4bcd-a0af-bacde436083c",
+			"id": "9c4c68f8-ed9c-4ef9-96e7-b11d8c8d6616",
 			"key": "city_name",
 			"value": ""
 		},
 		{
-			"id": "26c9abb5-81cd-4372-8238-b29bd7473a82",
+			"id": "661ae2a0-695d-4e10-8d5d-9d03bf32840d",
 			"key": "city_id",
 			"value": ""
 		},
 		{
-			"id": "e3d08f23-d109-4260-a0f2-fcbab2523c86",
+			"id": "a87722d4-db33-4e0e-9dbc-871037791676",
 			"key": "user_birthDate",
 			"value": ""
 		},
 		{
-			"id": "59b5e8c0-e0ae-411e-bbfd-9225734baaed",
+			"id": "15014ee9-abe7-4885-b8fc-349887680e82",
 			"key": "user_fullName",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "cdf161ae-4e28-4563-81bb-9d1ef806cc50",
+			"id": "601ca404-3f68-4f66-97ef-15cd0e1ac5de",
 			"key": "user_sex",
 			"value": ""
 		},
 		{
-			"id": "5f7e5794-b512-4fa1-8b9f-4046847761d7",
+			"id": "23d5e1fe-4c19-4eed-882e-dbfb33d3740f",
 			"key": "user_picturePrivacy",
 			"value": ""
 		},
 		{
-			"id": "e466cb0f-e317-4cc3-90fd-b492d87a1dda",
+			"id": "e50ed40f-ca51-494d-a236-7fa91206c40e",
 			"key": "username",
 			"value": ""
 		},
 		{
-			"id": "10d0074f-82a1-4346-adc8-674f29bdc85f",
+			"id": "dcdd43d1-7b60-411d-a209-4b838000b208",
 			"key": "requestId",
 			"value": ""
 		},
 		{
-			"id": "409da559-f05d-4919-9810-89fc73125a2d",
+			"id": "77b94f3c-a1f2-4eaa-98c8-3746ee385d6c",
 			"key": "senderUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "63843210-5a8f-40be-be59-c0f20ee67153",
+			"id": "7ad6271f-0aa2-4368-a7dc-d667360d196b",
 			"key": "recipientUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "fbe8c945-f3ae-494d-baea-19bb590c5a54",
+			"id": "3ff1718c-377e-4091-bcc9-cf9358b0d8af",
 			"key": "deletePost",
 			"value": ""
 		},
 		{
-			"id": "d2d59dbf-1102-4e07-ac94-d8da7f7df296",
+			"id": "db2abd80-0228-43f3-b882-af8946ed7985",
 			"key": "newestPostId",
 			"value": ""
 		},
 		{
-			"id": "b3a63a7a-17a2-4b2e-bc04-10612b2e8c54",
+			"id": "2d144682-c81a-4f46-86bb-cfba9349c202",
 			"key": "authUser",
 			"value": ""
 		},
 		{
-			"id": "0ee4013f-096c-4202-8416-cc6b843fb2e3",
+			"id": "5ecfddef-ba3f-479b-8e8a-c8f05fa86278",
 			"key": "hundred_symbols",
 			"value": ""
 		},
 		{
-			"id": "fe1c961b-30a9-4f9a-a11c-f863a5d0c630",
+			"id": "a050ee00-d9b0-407b-9ec1-7bceb0f96ad8",
 			"key": "postCreate",
 			"value": ""
 		},
 		{
-			"id": "efd726f6-9bee-4044-b14e-4d8ef762dbd4",
+			"id": "554e02fc-f9ac-4830-a0da-f5501b3a444c",
 			"key": "getPost",
 			"value": ""
 		},
 		{
-			"id": "129d541d-2cc9-4cb9-bab3-df9d0f2c1f9c",
+			"id": "2c08a323-edbc-4218-8e22-41eb8fe08132",
 			"key": "usertest1",
 			"value": "testipthree",
 			"type": "string"
 		},
 		{
-			"id": "df85ff0d-aaff-4bfd-99b5-cfdeee87a4c9",
+			"id": "3bf7b5c5-47d5-4fd0-bdca-81ba1e1847d8",
 			"key": "password1",
 			"value": "Testipthree*1",
 			"type": "string"
 		},
 		{
-			"id": "f06b984a-4a58-44bf-9be1-268e29189403",
+			"id": "fbee3566-842a-4d08-9ac6-c7764913d0b1",
 			"key": "hundred_symbols_edited",
+			"value": ""
+		},
+		{
+			"id": "990037c2-4bec-41df-9af9-83eb374226ee",
+			"key": "commentsCount",
+			"value": ""
+		},
+		{
+			"id": "c3359a5a-8f25-44f5-8a56-8dec60488ff6",
+			"key": "findAllComments",
 			"value": ""
 		}
 	]

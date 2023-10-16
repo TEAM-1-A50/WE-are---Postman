@@ -2064,11 +2064,12 @@
 								{
 									"listen": "prerequest",
 									"script": {
+										"id": "415c28a5-6700-4c7f-9290-096806e70b07",
 										"exec": [
 											"\r",
 											"const formData = {\r",
-											"    username: pm.collectionVariables.get('usertest1'),\r",
-											"    password: pm.collectionVariables.get('password1')\r",
+											"    username: pm.collectionVariables.get('username'),\r",
+											"    password: pm.collectionVariables.get('password')\r",
 											"};\r",
 											"    console.log(formData);\r",
 											"\r",
@@ -2107,13 +2108,13 @@
 											"    }\r",
 											"});"
 										],
-										"type": "text/javascript",
-										"id": "415c28a5-6700-4c7f-9290-096806e70b07"
+										"type": "text/javascript"
 									}
 								},
 								{
 									"listen": "test",
 									"script": {
+										"id": "9338bf13-d97a-434a-834e-20f45fb03422",
 										"exec": [
 											"var jsonData = pm.response.json();\r",
 											"pm.test(\"Status code is 200\", function () {\r",
@@ -2136,8 +2137,7 @@
 											"});\r",
 											""
 										],
-										"type": "text/javascript",
-										"id": "9338bf13-d97a-434a-834e-20f45fb03422"
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -2523,6 +2523,33 @@
 											"const hundredSymbols = Array(14).fill('comment ').join('');\r",
 											"pm.collectionVariables.set('hundred_symbols_comment', hundredSymbols);\r",
 											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('username'),\r",
+											"    password: pm.collectionVariables.get('password')\r",
+											"};\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequestConfig, function (err, response) {\r",
+											"if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        findallComments;\r",
+											"        createPost();\r",
+											"    }\r",
+											"});\r",
+											"\r",
 											"findallComments();\r",
 											"\r",
 											"function findallComments() {pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
@@ -2544,6 +2571,33 @@
 											"\r",
 											"        // You can also set a Postman environment variable with the result\r",
 											"        pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
+											"\r",
+											"    }\r",
+											"});}\r",
+											"\r",
+											"function createPost() {pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of; the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}\r",
+											"        \r",
+											"        setNewestCommentId();\r",
+											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
+											"        console.log(pm.collectionVariables.get(\"newestPostId\"));\r",
 											"    }\r",
 											"});}"
 										],
@@ -2657,7 +2711,8 @@
 											"    }\r",
 											"};\r",
 											"\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"authUser\"), function (err, response) {\r",
+											"pm.sendRequest(postRequestConfig, function (err, response) {\r",
+											"    createPost();\r",
 											"    createComment();\r",
 											"});\r",
 											"\r",
@@ -2687,7 +2742,31 @@
 											"    }\r",
 											"});}\r",
 											"\r",
-											""
+											"function createPost() {pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of; the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}\r",
+											"        \r",
+											"        setNewestCommentId();\r",
+											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
+											"        console.log(pm.collectionVariables.get(\"newestPostId\"));\r",
+											"    }\r",
+											"});}"
 										],
 										"type": "text/javascript"
 									}
@@ -3047,7 +3126,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "a239b4da-6483-4b86-9089-255c11dcebcb",
+				"id": "94d3f88b-1542-42ac-adbc-8edef71e8ff4",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3057,7 +3136,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "bbc72c45-3db2-4ed2-bb76-a86483a75368",
+				"id": "1369aba3-bd2e-46dd-9f7d-08c29b406780",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3067,160 +3146,173 @@
 	],
 	"variable": [
 		{
-			"id": "924b8d2a-7a7d-4643-9452-85705c49420d",
+			"id": "56be93cc-083b-4de5-9a33-041c366fc40f",
 			"key": "password",
 			"value": "123456*A"
 		},
 		{
-			"id": "1142876e-d3f5-4d00-b516-b097e7c14455",
+			"id": "a7ba0ecd-2b74-43f5-b400-b5cbb17f131b",
 			"key": "baseurl",
 			"value": "http://localhost:8081"
 		},
 		{
-			"id": "f27ac98c-cb92-4307-baaf-035a7a564c64",
+			"id": "408c1f2a-b53a-43a1-a519-b04b6d89d601",
 			"key": "email",
 			"value": ""
 		},
 		{
-			"id": "396086d5-fa2b-455c-a2fe-efcf8878aa3e",
+			"id": "b84da263-1142-48b6-bce6-91e11dbf122e",
 			"key": "userID",
 			"value": "41"
 		},
 		{
-			"id": "5241724c-51a3-4fc9-a6f1-0fc40d7f5fcd",
+			"id": "0467a37d-6b5b-473b-8273-bc501cd0acf7",
 			"key": "randomNumber",
 			"value": ""
 		},
 		{
-			"id": "04a1ae4f-b715-481f-9ef2-6aa62fe9e63f",
+			"id": "218b12ec-2c5f-45db-aa84-c8f5532ed301",
 			"key": "userExpertise",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "aa0cfff1-0409-40b8-8dff-0d3c642837d3",
+			"id": "f1ae59bc-c4de-422b-8f45-00effc044398",
 			"key": "user_firstName",
 			"value": ""
 		},
 		{
-			"id": "9fb68072-1a81-40a9-9829-3ecdbd8aeedb",
+			"id": "5409fabb-0d09-4919-a464-0ac291cf71f1",
 			"key": "cityData",
 			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
 			"type": "string"
 		},
 		{
-			"id": "2e684d5e-fd80-4eed-92ad-9d6937381a1f",
+			"id": "e1ef5a46-ceca-4f8b-941b-fcd5281ad811",
 			"key": "user_lastName",
 			"value": ""
 		},
 		{
-			"id": "9c4c68f8-ed9c-4ef9-96e7-b11d8c8d6616",
+			"id": "51c5c4da-6b2d-4ecd-b358-4e89458500a6",
 			"key": "city_name",
 			"value": ""
 		},
 		{
-			"id": "661ae2a0-695d-4e10-8d5d-9d03bf32840d",
+			"id": "b023cc3e-c23e-42eb-8a6c-88497c9d1361",
 			"key": "city_id",
 			"value": ""
 		},
 		{
-			"id": "a87722d4-db33-4e0e-9dbc-871037791676",
+			"id": "4fc1bed6-7ede-4c4c-963d-6d626705b6a4",
 			"key": "user_birthDate",
 			"value": ""
 		},
 		{
-			"id": "15014ee9-abe7-4885-b8fc-349887680e82",
+			"id": "c3a4e354-cde6-41aa-a4d2-28af77a702f3",
 			"key": "user_fullName",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "601ca404-3f68-4f66-97ef-15cd0e1ac5de",
+			"id": "a1b43637-835a-4327-9943-a25b0281f767",
 			"key": "user_sex",
 			"value": ""
 		},
 		{
-			"id": "23d5e1fe-4c19-4eed-882e-dbfb33d3740f",
+			"id": "6396a862-25bb-4444-9e1a-191ca973df91",
 			"key": "user_picturePrivacy",
 			"value": ""
 		},
 		{
-			"id": "e50ed40f-ca51-494d-a236-7fa91206c40e",
+			"id": "b7480bf1-e903-4235-a999-6a8a4ddb0e17",
 			"key": "username",
 			"value": ""
 		},
 		{
-			"id": "dcdd43d1-7b60-411d-a209-4b838000b208",
+			"id": "87ab1c42-54e9-4a31-9eff-d5154ef2975b",
 			"key": "requestId",
 			"value": ""
 		},
 		{
-			"id": "77b94f3c-a1f2-4eaa-98c8-3746ee385d6c",
+			"id": "97f9a08d-2877-4432-9bfc-5ad5cebef306",
 			"key": "senderUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "7ad6271f-0aa2-4368-a7dc-d667360d196b",
+			"id": "45d8d2d7-2ae0-4301-a0b7-2b083eeb2674",
 			"key": "recipientUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "3ff1718c-377e-4091-bcc9-cf9358b0d8af",
+			"id": "ec0b55f3-be32-49ee-a592-9519137b85ad",
 			"key": "deletePost",
 			"value": ""
 		},
 		{
-			"id": "db2abd80-0228-43f3-b882-af8946ed7985",
+			"id": "2d689166-ecfa-4846-85c4-0bbe858fb4d0",
 			"key": "newestPostId",
 			"value": ""
 		},
 		{
-			"id": "2d144682-c81a-4f46-86bb-cfba9349c202",
+			"id": "9fab36a4-e224-4d8e-aedb-309101c0fc14",
 			"key": "authUser",
 			"value": ""
 		},
 		{
-			"id": "5ecfddef-ba3f-479b-8e8a-c8f05fa86278",
+			"id": "963028b0-6998-41fd-97df-93aaf61bec09",
 			"key": "hundred_symbols",
 			"value": ""
 		},
 		{
-			"id": "a050ee00-d9b0-407b-9ec1-7bceb0f96ad8",
+			"id": "f1f66c64-05cc-488f-8e05-2f1dc2c459ad",
 			"key": "postCreate",
 			"value": ""
 		},
 		{
-			"id": "554e02fc-f9ac-4830-a0da-f5501b3a444c",
+			"id": "9af25b78-db30-4655-afa9-85e512167526",
 			"key": "getPost",
 			"value": ""
 		},
 		{
-			"id": "2c08a323-edbc-4218-8e22-41eb8fe08132",
-			"key": "usertest1",
-			"value": "testipthree",
-			"type": "string"
-		},
-		{
-			"id": "3bf7b5c5-47d5-4fd0-bdca-81ba1e1847d8",
-			"key": "password1",
-			"value": "Testipthree*1",
-			"type": "string"
-		},
-		{
-			"id": "fbee3566-842a-4d08-9ac6-c7764913d0b1",
+			"id": "de1e951a-c9ec-45a7-abb1-4a80b0b01b7c",
 			"key": "hundred_symbols_edited",
 			"value": ""
 		},
 		{
-			"id": "990037c2-4bec-41df-9af9-83eb374226ee",
+			"id": "f6db98bf-9d82-4a35-bdc5-040c0c621732",
 			"key": "commentsCount",
 			"value": ""
 		},
 		{
-			"id": "c3359a5a-8f25-44f5-8a56-8dec60488ff6",
+			"id": "0fa0ad15-067c-4c0c-8d4e-09da8d7a4c3f",
 			"key": "findAllComments",
+			"value": ""
+		},
+		{
+			"id": "50265931-2626-46a7-aebb-897e426bf4ec",
+			"key": "hundred_symbols_comment",
+			"value": ""
+		},
+		{
+			"id": "ed8035e3-f763-427e-9db8-09b8e31b0d56",
+			"key": "previousCommentsCount",
+			"value": ""
+		},
+		{
+			"id": "d8b1e1e7-fa07-42dc-8eef-962bb989383f",
+			"key": "newestCommentId",
+			"value": ""
+		},
+		{
+			"id": "d747d2f0-fe05-4995-aebe-a3f6fb514a43",
+			"key": "commentCreate",
+			"value": ""
+		},
+		{
+			"id": "083b4ddb-d6cd-44f6-96e1-e69cfb61c004",
+			"key": "hundred_symbols_edited_comment",
 			"value": ""
 		}
 	]

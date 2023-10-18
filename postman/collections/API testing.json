@@ -16,7 +16,7 @@
 							"name": "Register users",
 							"item": [
 								{
-									"name": "Register user",
+									"name": "Create user",
 									"event": [
 										{
 											"listen": "test",
@@ -135,7 +135,7 @@
 									"response": []
 								},
 								{
-									"name": "Register user without expertise category",
+									"name": "Create user without expertise category",
 									"event": [
 										{
 											"listen": "test",
@@ -203,7 +203,7 @@
 									"response": []
 								},
 								{
-									"name": "Register admin user",
+									"name": "Create admin user",
 									"event": [
 										{
 											"listen": "test",
@@ -384,7 +384,7 @@
 							"name": "Get user by ID, name or expertise",
 							"item": [
 								{
-									"name": "Register user",
+									"name": "Create user",
 									"event": [
 										{
 											"listen": "test",
@@ -416,7 +416,6 @@
 													"",
 													"// Send the GET request",
 													"pm.sendRequest(getRequestConfig,  (err, response) => {",
-													"    console.log(response.json());",
 													"    if (err) {",
 													"        console.error(err);",
 													"        pm.test(\"Request failed\", function () {",
@@ -430,6 +429,8 @@
 													"        var responseData = response.json();",
 													"        var expectedUsername = pm.collectionVariables.get(\"username\");",
 													"        var expectedUserID = pm.collectionVariables.get(\"userID\");",
+													"        var expectedEmail = pm.collectionVariables.get(\"email\");",
+													"        ",
 													"",
 													"        // Check if the expected username matches the response username",
 													"        pm.test(\"Usernames should match\", function () {",
@@ -445,6 +446,11 @@
 													"        pm.expect(responseData.authorities).to.include('ROLE_USER', \"Expected user role to be 'ROLE_USER', but found '\" + responseData.authorities + \"'\");",
 													"    ",
 													"        });",
+													"",
+													"        pm.test(\"Emails should match\", function () {",
+													"    pm.expect(responseData.email).to.eql(expectedEmail,  \"Email mismatch. Expected: \" + expectedEmail + \", Actual: \" + responseData.email);",
+													"});",
+													"",
 													"    }",
 													"});"
 												],
@@ -514,21 +520,28 @@
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
 													"});",
 													"",
-													"// Get the expected username and id value from the environment",
+													"// Get the expected username, id and email value from the environment",
 													"var expectedUsername = pm.collectionVariables.get(\"username\");",
 													"var expectedUserID = pm.collectionVariables.get(\"userID\");",
+													"var expectedEmail = pm.collectionVariables.get(\"email\");",
 													"",
 													"var responseUsername = pm.response.json().username;",
 													"var responseUserID = pm.response.json().id;",
+													"var responseEmail = pm.response.json().email;",
 													"",
 													"// Check if the expected username matches the response username",
 													"pm.test(\"Usernames should match\", function () {",
 													"    pm.expect(responseUsername).to.eql(expectedUsername, \"Username mismatch. Expected: \" + expectedUsername + \", Actual: \" + responseUsername);",
 													"});",
 													"",
-													"// Check if the expected username matches the response username",
+													"// Check if the expected id matches the response id",
 													"pm.test(\"IDs should match\", function () {",
 													"    pm.expect(responseUserID.toString()).to.eql(expectedUserID,  \"ID mismatch. Expected: \" + expectedUserID + \", Actual: \" + responseUserID);",
+													"});",
+													"",
+													"// Check if the expected email matches the response email",
+													"pm.test(\"Emails should match\", function () {",
+													"    pm.expect(responseEmail).to.eql(expectedEmail,  \"Email mismatch. Expected: \" + expectedEmail + \", Actual: \" + responseEmail);",
 													"});",
 													"",
 													"var expertise = pm.response.json().expertise;",
@@ -574,7 +587,7 @@
 									"response": []
 								},
 								{
-									"name": "Get users by expertise",
+									"name": "Get user by expertise",
 									"event": [
 										{
 											"listen": "test",
@@ -585,15 +598,13 @@
 													"    pm.response.to.have.status(200, \"Expected status code to be 200 OK\");",
 													"});",
 													"",
-													"// Get the \"category\" name from the response",
 													"var categoryName = pm.response.json()[0].expertiseProfile.category.name;",
 													"",
-													"// Get the \"userExpertise\" collection variable",
-													"var userExpertise = pm.collectionVariables.get(\"userExpertise\");",
+													"var expectedCategoryName = pm.collectionVariables.get(\"userExpertise\");",
 													"",
-													"// Check if the \"category\" name matches the \"userExpertise\" variable",
-													"pm.test(\"Category name should match expertise\", function () {",
-													"    pm.expect(categoryName).to.equal(userExpertise,  \"Category name and expertise mismatch. Expected: \" + userExpertise + \", Actual: \" + categoryName);",
+													"// Check if the \"expertise category\" name matches the \"userExpertise\" variable",
+													"pm.test(\"Expertise category names should match.\", function () {",
+													"    pm.expect(categoryName).to.equal(expectedCategoryName,  \"Expertise category names mismatch. Expected: \" + expectedCategoryName + \", Actual: \" + categoryName);",
 													"});",
 													"",
 													""
@@ -607,6 +618,9 @@
 										"disableBodyPruning": true
 									},
 									"request": {
+										"auth": {
+											"type": "noauth"
+										},
 										"method": "POST",
 										"header": [],
 										"body": {
@@ -626,6 +640,195 @@
 											"path": [
 												"api",
 												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update user's personal profile (add name)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "44cc0546-7b10-4ff8-9616-bb1ed063bfa0",
+												"exec": [
+													"// To edit your own profile user must be authenticated",
+													"// Define the form data",
+													"const formData = {",
+													"    username: pm.collectionVariables.get(\"username\"),",
+													"",
+													"    password: pm.collectionVariables.get(\"password\")",
+													"};",
+													"    console.log(formData);",
+													"",
+													"// Define the POST request configuration",
+													"const postRequestConfig = {",
+													"    method: 'POST',",
+													"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
+													"    header: 'Content-Type: application/x-www-form-urlencoded',",
+													"    body: {",
+													"        mode: 'formdata',",
+													"        formdata: [",
+													"            { key: 'username', value: formData.username },",
+													"            { key: 'password', value: formData.password }",
+													"        ]",
+													"    }",
+													"};",
+													"",
+													"// Send the POST request",
+													"pm.sendRequest(postRequestConfig, function (err, response) {",
+													"    console.log(response);",
+													"    if (err) {",
+													"        console.error(err);",
+													"        pm.test(\"Request failed\", function () {",
+													"            pm.expect.fail(\"POST request failed\");",
+													"        });",
+													"    } ",
+													"});",
+													"",
+													"",
+													"",
+													"// Generate a random birth date within a desired range",
+													"function getRandomDate(minYear, maxYear) {",
+													"    const year = Math.floor(Math.random() * (maxYear - minYear + 1)) + minYear;",
+													"    const month = Math.floor(Math.random() * 12) + 1; // Months are 1-12",
+													"    const day = Math.floor(Math.random() * 31) + 1; // Days are 1-31",
+													"",
+													"    // Ensure the day and month are formatted with leading zeros if needed",
+													"    const formattedMonth = month.toString().padStart(2, '0');",
+													"    const formattedDay = day.toString().padStart(2, '0');",
+													"",
+													"    return `${year}-${formattedMonth}-${formattedDay}`;",
+													"}",
+													"",
+													"// Define the desired birth date range",
+													"const minBirthYear = 1930;",
+													"const maxBirthYear = 2008;",
+													"",
+													"// Generate a random birth date within the specified range",
+													"const randomBirthDate = getRandomDate(minBirthYear, maxBirthYear);",
+													"",
+													"// Set the random birth date as a collection variable",
+													"pm.collectionVariables.set(\"user_birthDate\", randomBirthDate);",
+													"",
+													"",
+													"",
+													"// Set random first and last name",
+													"pm.collectionVariables.set(\"user_firstName\", pm.variables.replaceIn('{{$randomFirstName}}'));",
+													"pm.collectionVariables.set(\"user_lastName\", pm.variables.replaceIn('{{$randomLastName}}'));",
+													"",
+													"// Set random city",
+													"// Parse the CSV content from the environment variable",
+													"const cityCSV = pm.collectionVariables.get(\"cityData\").split('\\n');",
+													"const randomIndex = Math.floor(Math.random() * cityCSV.length);",
+													"",
+													"// Select a random city and its ID",
+													"const [cityId, cityName] = cityCSV[randomIndex].split(',');",
+													"",
+													"",
+													"// Set the \"city\" and \"id\" variables in the request environment",
+													"pm.collectionVariables.set(\"city_name\", cityName.trim());",
+													"pm.collectionVariables.set(\"city_id\", parseInt(cityId));",
+													"",
+													"",
+													"// Set either MALE or FEMALE as sex",
+													"const sexes = [\"MALE\", \"FEMALE\"];",
+													"",
+													"// Generate a random index to select a value",
+													"const index = Math.floor(Math.random() * sexes.length);",
+													"",
+													"// Get the random sex value",
+													"const randomSex = sexes[index];",
+													"",
+													"// Set the random sex as a collection variable",
+													"pm.collectionVariables.set(\"user_sex\", randomSex);",
+													"",
+													"// Set picture privacy",
+													"// Generate a random boolean value (true or false)",
+													"const randomBoolean = Math.random() < 0.5;",
+													"",
+													"// Set the random boolean value as a collection variable",
+													"pm.collectionVariables.set(\"user_picturePrivacy\", randomBoolean);",
+													"",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"id": "1f7bf19a-2a14-4e5c-be51-e9cc5b7e7897",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200, 'Expected 200');",
+													"});",
+													"",
+													"pm.test(\"Check birthYear in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.birthYear).to.equal(pm.collectionVariables.get(\"user_birthDate\"));",
+													"});",
+													"",
+													"pm.test(\"Check firstName in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.firstName).to.equal(pm.collectionVariables.get(\"user_firstName\"));",
+													"});",
+													"",
+													"pm.test(\"Check lastName in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.lastName).to.equal(pm.collectionVariables.get(\"user_lastName\"));",
+													"});",
+													"",
+													"pm.test(\"Check picturePrivacy in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    const expectedPicturePrivacy = pm.collectionVariables.get(\"user_picturePrivacy\"); ",
+													"",
+													"    pm.expect(responseJson.picturePrivacy).to.equal(expectedPicturePrivacy);",
+													"});",
+													"",
+													"pm.test(\"Check sex in response\", function () {",
+													"    const responseJson = pm.response.json();",
+													"    pm.expect(responseJson.sex).to.equal(pm.collectionVariables.get(\"user_sex\"));",
+													"});",
+													"",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "7bbbf860-abb5-460e-a1aa-c36e48e9ab5f",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"birthYear\": \"{{user_birthDate}}\",\n  \"firstName\": \"{{user_firstName}}\",\n  \"lastName\": \"{{user_lastName}}\",\n  \"location\": {\n    \"city\": {\n      \"city\": \"{{city_name}}\",\n      \"country\": {},\n      \"id\": {{city_id}}\n    }\n    ,\n    \"id\": 1\n  },\n  \"memberSince\": \"\",\n  \"personalReview\": \"\",\n  \"picture\": \"\",\n  \"picturePrivacy\": {{user_picturePrivacy}},\n  \"sex\": \"{{user_sex}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseurl}}/api/users/auth/{{userID}}/personal",
+											"host": [
+												"{{baseurl}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"auth",
+												"{{userID}}",
+												"personal"
 											]
 										}
 									},
@@ -660,14 +863,14 @@
 													"    } else {",
 													"        // Validate the response",
 													"        pm.test('response should be okay to process', () => {",
-													"        pm.expect(response).to.have.property('code', 200);});",
-													"        ",
-													"pm.test(\"User's first name is correct\", function () {",
-													"    var expectedFirstName = pm.collectionVariables.get(\"user_firstName\"); ",
-													"    var responseData = response.json();",
-													"    pm.expect(responseData.firstName).to.eql(expectedFirstName, \"Expected first name to be '\" + expectedFirstName + \"', but found '\" + responseData.firstName + \"'\");",
-													"});",
+													"        pm.expect(response).to.have.status(200);});",
 													"",
+													"        ",
+													"        pm.test(\"User's first name is correct\", function () {",
+													"        var expectedFirstName = pm.collectionVariables.get(\"user_firstName\"); ",
+													"        var responseData = response.json();",
+													"        pm.expect(responseData.firstName).to.eql(expectedFirstName, \"Expected first name to be '\" + expectedFirstName + \"', but found '\" + responseData.firstName + \"'\");",
+													"        });",
 													"    }",
 													"});",
 													"",
@@ -759,17 +962,16 @@
 													"        pm.test('response should be okay to process', () => {",
 													"        pm.expect(response).to.have.property('code', 200);});",
 													"        ",
-													"pm.test(\"User's first name is correct\", function () {",
-													"    var expectedFirstName = pm.collectionVariables.get(\"user_firstName\"); ",
-													"    var responseData = response.json();",
-													"    pm.expect(responseData.firstName).to.eql(expectedFirstName, \"Expected first name to be '\" + expectedFirstName + \"', but found '\" + responseData.firstName + \"'\");",
-													"});",
-													"pm.test(\"User's last name is correct\", function () {",
-													"    var expectedLastName = pm.collectionVariables.get(\"user_lastName\"); ",
-													"    var responseData = response.json();",
-													"    pm.expect(responseData.lastName).to.eql(expectedLastName, \"Expected last name to be '\" + expectedLastName + \"', but found '\" + responseData.lastName + \"'\");",
-													"});",
-													"",
+													"        pm.test(\"User's first name is correct\", function () {",
+													"        var expectedFirstName = pm.collectionVariables.get(\"user_firstName\"); ",
+													"        var responseData = response.json();",
+													"        pm.expect(responseData.firstName).to.eql(expectedFirstName, \"Expected first name to be '\" + expectedFirstName + \"', but found '\" + responseData.firstName + \"'\");",
+													"        });",
+													"        pm.test(\"User's last name is correct\", function () {",
+													"        var expectedLastName = pm.collectionVariables.get(\"user_lastName\"); ",
+													"        var responseData = response.json();",
+													"        pm.expect(responseData.lastName).to.equal(expectedLastName, \"Expected last name to be \" + expectedLastName + \", but found \" + responseData.lastName);",
+													"        });",
 													"    }",
 													"});",
 													"",
@@ -1130,39 +1332,10 @@
 											"script": {
 												"id": "f5055629-2965-4627-8075-e9295d87085f",
 												"exec": [
-													"// // To edit your own profile user must be authenticated",
-													"// // Define the form data",
-													"// const formData = {",
-													"//     username: pm.collectionVariables.get(\"username\"),",
-													"",
-													"//     password: pm.collectionVariables.get(\"password\")",
-													"// };",
-													"//     console.log(formData);",
-													"",
-													"// // Define the POST request configuration",
-													"// const postRequestConfig = {",
-													"//     method: 'POST',",
-													"//     url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
-													"//     header: 'Content-Type: application/x-www-form-urlencoded',",
-													"//     body: {",
-													"//         mode: 'formdata',",
-													"//         formdata: [",
-													"//             { key: 'username', value: formData.username },",
-													"//             { key: 'password', value: formData.password }",
-													"//         ]",
-													"//     }",
-													"// };",
-													"",
-													"// // Send the POST request",
-													"// pm.sendRequest(postRequestConfig, function (err, response) {",
-													"//     console.log(response);",
-													"//     if (err) {",
-													"//         console.error(err);",
-													"//         pm.test(\"Request failed\", function () {",
-													"//             pm.expect.fail(\"POST request failed\");",
-													"//         });",
-													"//     } ",
-													"// });"
+													"pm.collectionVariables.set(\"skill1\", pm.variables.replaceIn('{{$randomWord}}'));",
+													"pm.collectionVariables.set(\"skill2\", pm.variables.replaceIn('{{$randomWord}}'));",
+													"pm.collectionVariables.set(\"skill3\", pm.variables.replaceIn('{{$randomWord}}'));",
+													""
 												],
 												"type": "text/javascript"
 											}
@@ -1172,6 +1345,26 @@
 											"script": {
 												"id": "97ebcb11-392e-4738-8800-888df287a5d8",
 												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Skills Exist in Response\", function () {",
+													"    var requestSkills = [pm.variables.get(\"skill1\"), pm.variables.get(\"skill2\"), pm.variables.get(\"skill3\")];",
+													"    var responseSkills = pm.response.json().skills.map(skill => skill.skill);",
+													"",
+													"    _.each(requestSkills, function (reqSkill) {",
+													"        pm.expect(responseSkills).to.include(reqSkill);",
+													"    });",
+													"});",
+													"",
+													"pm.test(\"Matching Category Name\", function () {",
+													"    var responseCategoryName = pm.response.json().category.name;",
+													"",
+													"    pm.expect(responseCategoryName).to.equal(pm.collectionVariables.get('userExpertise'));",
+													"});",
+													"",
+													"",
 													""
 												],
 												"type": "text/javascript"
@@ -1190,7 +1383,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"availability\": 3,\n  \"category\": {\n    \"id\": 103, \n    \"name\": \"Author\"\n  },\n  \"id\": 0,\n  \"skill1\": \"cook\",\n  \"skill2\": \"clean\",\n  \"skill3\": \"vacuum\",\n  \"skill4\": \"dust\",\n  \"skill5\": \"wash\",\n  \"skills\":[\"more\", \"and more\"]\n}",
+											"raw": "{\n  \"availability\": 1,\n  \"category\": {\n    \"name\": \"{{userExpertise}}\"\n  },\n//   \"id\": 0,\n  \"skills\":[\n        \"{{skill1}}\", \"{{skill2}}\", \"{{skill3}}\"\n  ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1198,7 +1391,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseurl}}/api/users/auth/{{userID}}/expertise",
+											"raw": "{{baseurl}}/api/users/auth/{{userID}}/expertise?name={{username}}",
 											"host": [
 												"{{baseurl}}"
 											],
@@ -1208,6 +1401,12 @@
 												"auth",
 												"{{userID}}",
 												"expertise"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "{{username}}"
+												}
 											]
 										}
 									},
@@ -1705,11 +1904,10 @@
 											"",
 											"pm.test(\"Response includes two usernames\", function () {",
 											"    // Define the expected usernames",
-											"    const expectedSender = pm.collectionVariables.get('senderUsername');",
-											"    const expectedRecipient = pm.collectionVariables.get('recipientUsername');;",
+											"    var expectedSender = pm.collectionVariables.get('senderUsername');",
+											"    var expectedRecipient = pm.collectionVariables.get('recipientUsername');",
 											"",
-											"    // Extract the response text",
-											"    const responseText = pm.response.text();",
+											"    var responseText = pm.response.text();",
 											"",
 											"    // Check if both usernames are present in the response",
 											"    pm.expect(responseText).to.include(expectedSender);",
@@ -1764,7 +1962,6 @@
 											"});",
 											"",
 											"pm.test(\"Response is an empty array\", function () {",
-											"    // Extract the response data as JSON",
 											"    const responseData = pm.response.json();",
 											"",
 											"    // Check if the response data is an array and is empty",
@@ -1822,18 +2019,17 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "4b6ecd84-742c-4ea3-b918-128c1d09d6b0",
+										"id": "0dcd346f-b351-4e30-a101-d8f117c26bfb",
 										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"pm.collectionVariables.set(\"authUser\", pm.request)"
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
 										],
 										"type": "text/javascript"
 									}
 								}
 							],
-							"id": "1ff8f2cf-9525-4654-9b2f-3be7b6899037",
+							"id": "f312553b-0115-4163-8b89-02ea2a429b29",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -1871,95 +2067,12 @@
 							"response": []
 						},
 						{
-							"name": "Get All posts",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"var jsonData = pm.response.json();\r",
-											"console.log(jsonData);\r",
-											"\r",
-											"// Access the response JSON directly\r",
-											"var responseJson = pm.response.json();\r",
-											"\r",
-											"// Function to extract the date as a JavaScript Date object for comparison\r",
-											"function extractDate(post) {\r",
-											"    return new Date(post.date);\r",
-											"}\r",
-											"\r",
-											"// Find the post with the newest date\r",
-											"var newestPost = responseJson.reduce(function (maxPost, post) {\r",
-											"    return extractDate(post) > extractDate(maxPost) ? post : maxPost;\r",
-											"}, responseJson[0]);\r",
-											"\r",
-											"// Extract the ID of the newest post\r",
-											"var newestPostId = newestPost.postId;\r",
-											"\r",
-											"// Log the ID of the newest post\r",
-											"console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
-											"\r",
-											"// You can also set a Postman environment variable with the result\r",
-											"pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
-											"\r",
-											"pm.collectionVariables.set(\"getPost\", pm.request);\r",
-											""
-										],
-										"type": "text/javascript",
-										"id": "b32b9a4c-4edf-4edd-af4c-9c43fb4d7add"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"pm.sendRequest(pm.collectionVariables.get(\"authUser\"));\r",
-											""
-										],
-										"type": "text/javascript",
-										"id": "23bed68d-6463-4dd9-b7f0-40defe4be48c"
-									}
-								}
-							],
-							"id": "5f7f6ebc-781c-444f-b211-ba131c22801e",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseurl}}/api/post/",
-									"host": [
-										"{{baseurl}}"
-									],
-									"path": [
-										"api",
-										"post",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Create post",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
+										"id": "40a34e94-f763-4f61-82bd-8a93eb85a5ae",
 										"exec": [
 											"pm.test(\"Status code is 200\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
@@ -1974,14 +2087,12 @@
 											"    var jsonData = pm.response.json();\r",
 											"    pm.expect(jsonData.content).to.equal(postcontent);\r",
 											"});\r",
-											"var jsonData = pm.response.json();\r",
-											"console.log(jsonData);\r",
 											"\r",
-											"// Access the response JSON directly\r",
 											"var responseJson = pm.response.json();\r",
 											"\r",
 											"// Extract the ID of the newest post\r",
-											"var newestPostId = responseJson.postId;\r",
+											"var newestPostId = parseInt(responseJson.postId);\r",
+											"console.log(newestPostId);\r",
 											"\r",
 											"// Log the ID of the newest post\r",
 											"console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
@@ -1989,27 +2100,25 @@
 											"// You can also set a Postman environment variable with the result\r",
 											"pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
 											"\r",
-											"\r",
 											"pm.collectionVariables.set(\"postCreate\", pm.request);\r",
 											"\r",
 											"\r",
-											"\r",
-											"pm.sendRequest({\r",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?postId=${newestPostId}`,\r",
-											"    method: 'DELETE',\r",
-											"    header:{\r",
-											"        'Content-Type':'application/json',\r",
-											"    }\r",
-											"});\r",
+											"// pm.sendRequest({\r",
+											"//     url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?postId=${newestPostId}`,\r",
+											"//     method: 'DELETE',\r",
+											"//     header:{\r",
+											"//         'Content-Type':'application/json',\r",
+											"//     }\r",
+											"// });\r",
 											""
 										],
-										"type": "text/javascript",
-										"id": "40a34e94-f763-4f61-82bd-8a93eb85a5ae"
+										"type": "text/javascript"
 									}
 								},
 								{
 									"listen": "prerequest",
 									"script": {
+										"id": "bc8ae6c2-bc32-434c-85e3-9deb29c1689f",
 										"exec": [
 											"pm.sendRequest(pm.collectionVariables.get(\"authUser\"));\r",
 											"\r",
@@ -2019,8 +2128,7 @@
 											"pm.collectionVariables.set('hundred_symbols', hundredSymbols);\r",
 											""
 										],
-										"type": "text/javascript",
-										"id": "bc8ae6c2-bc32-434c-85e3-9deb29c1689f"
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -2053,6 +2161,384 @@
 										"post",
 										"auth",
 										"creator"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All posts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b32b9a4c-4edf-4edd-af4c-9c43fb4d7add",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Access the response JSON directly\r",
+											"var response = pm.response.json();\r",
+											"\r",
+											"var responsePostId = response[0].postId;\r",
+											"console.log(responsePostId);\r",
+											"\r",
+											"// Compare 'newestPostId' with 'postId'\r",
+											"pm.test(\"Check if newestPostId matches postId\", function() {\r",
+											"    pm.expect(pm.collectionVariables.get('newestPostId')).to.equal(responsePostId, \"newestPostId does not match postId. Newest: \" + pm.collectionVariables.get('newestPostId') + \", Post: \" + responsePostId);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "23bed68d-6463-4dd9-b7f0-40defe4be48c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "5f7f6ebc-781c-444f-b211-ba131c22801e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/post/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "01b09295-d4a3-49fd-b394-e4eccabfca5b",
+										"exec": [
+											"\r",
+											"// const formData = {\r",
+											"//     username: pm.collectionVariables.get('username'),\r",
+											"//     password: pm.collectionVariables.get('password')\r",
+											"// };\r",
+											"//     console.log(formData);\r",
+											"\r",
+											"// // Define the POST request configuration\r",
+											"// const postRequestConfig = {\r",
+											"//     method: 'POST',\r",
+											"//     url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"//     header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"//     body: {\r",
+											"//         mode: 'formdata',\r",
+											"//         formdata: [\r",
+											"//             { key: 'username', value: formData.username },\r",
+											"//             { key: 'password', value: formData.password }\r",
+											"//         ]\r",
+											"//     }\r",
+											"// };\r",
+											"\r",
+											"// pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"//     if (err) {\r",
+											"//         console.error(err);\r",
+											"//         // Handle the error if needed\r",
+											"//     } else {\r",
+											"//         var jsonData = response.json();\r",
+											"//         console.log(jsonData);\r",
+											"\r",
+											"//         // Access the response JSON directly\r",
+											"//         var responseJson = response.json();\r",
+											"\r",
+											"//         // Extract the ID of the newest post\r",
+											"//         var newestPostId = responseJson.postId;\r",
+											"\r",
+											"//         // Log the ID of the newest post\r",
+											"//         console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"//         // You can also set a Postman environment variable with the result\r",
+											"//         pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"//     }\r",
+											"// });\r",
+											"\r",
+											"// create 100 symbols message\r",
+											"const hundredSymbols = Array(14).fill('edited ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols_edited', hundredSymbols);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "ad260945-abe1-4bf9-833d-1d6b88bb0d8f",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"    url: pm.variables.get('baseurl') + '/api/post/',\r",
+											"    method: 'GET',\r",
+											"    }, function (error, response) {\r",
+											"    pm.test(\"Status code is 200\", function () {\r",
+											"        pm.response.to.have.status(200);\r",
+											"    });\r",
+											"\r",
+											"var response = response.json();\r",
+											"\r",
+											"console.log(response[0].postId);\r",
+											"    pm.test(\"Matching Post ID\", function () {\r",
+											"        pm.expect(response[0].postId).to.eql(pm.collectionVariables.get('newestPostId'));\r",
+											"    });\r",
+											"\r",
+											"    pm.test(\"Matching Post Content\", function () {\r",
+											"        pm.expect(response[0].content).to.eql(pm.collectionVariables.get('hundred_symbols_edited'));\r",
+											"    });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "7b00d074-4189-4240-830d-ce4ea466031e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"content\": \"{{hundred_symbols_edited}}\",\r\n  \"picture\": \"https://content.api.news/v3/images/bin/eb46d3099a5f3b45b4b1b0f4deae1d0a\",\r\n  \"public\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/post/auth/editor?postId={{newestPostId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										"auth",
+										"editor"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "{{username}}",
+											"disabled": true
+										},
+										{
+											"key": "postId",
+											"value": "{{newestPostId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete post",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "fc41de6c-3f70-4a1d-a58d-e8f46865859d",
+										"exec": [
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('username'),\r",
+											"    password: pm.collectionVariables.get('password')\r",
+											"};\r",
+											"    console.log(formData);\r",
+											"\r",
+											"// Define the POST request configuration\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "465eb436-d207-43aa-90ea-e5fc1ed83a5d",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"var deletedPostId=pm.collectionVariables.get('newestPostId');\r",
+											"\r",
+											"pm.sendRequest({\r",
+											"       url: `${pm.collectionVariables.get('baseurl')}/api/post/}`,\r",
+											"    method: 'GET',\r",
+											"    header:{\r",
+											"        'Content-Type':'application/json',\r",
+											"    }\r",
+											"}, function(err,response){\r",
+											"    if (err){\r",
+											"        console.error(err);\r",
+											"    } else{\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);  \r",
+											"\r",
+											"        var newestPostId = jsonData.postId;\r",
+											"\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
+											"\r",
+											"pm.test(\"Post is deleted\", function () {\r",
+											"    pm.expect(jsonData.postId).to.not.equal(deletedPostId);\r",
+											"});\r",
+											"    }\r",
+											"});\r",
+											"pm.collectionVariables.set(\"deletePost\", pm.request)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "9e94b341-38f7-48dc-a09e-eb19578c896e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/post/auth/manager?postId={{newestPostId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										"auth",
+										"manager"
+									],
+									"query": [
+										{
+											"key": "postId",
+											"value": "{{newestPostId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "92d33ffb-bd5e-4ed8-8639-56a0b1f572aa"
+				},
+				{
+					"name": "Like a Post",
+					"item": [
+						{
+							"name": "Authenticate user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0dcd346f-b351-4e30-a101-d8f117c26bfb",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "bf4e3b69-9045-4ef4-91bd-abbcfe8b5955",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseurl}}/authenticate",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"authenticate"
 									]
 								}
 							},
@@ -2124,7 +2610,7 @@
 											"            pm.expect(jsonData.postId).to.not.null;\r",
 											"        });\r",
 											"pm.test(\"User expected to have liked the comment one from the test\", function() {\r",
-											"    pm.expect(jsonData.likes[0].username).to.equal(pm.collectionVariables.get('usertest1'))\r",
+											"    pm.expect(jsonData.likes[0].username).to.equal(pm.collectionVariables.get('username'))\r",
 											"});\r",
 											"\r",
 											"var newestPostId = pm.collectionVariables.get('newestPostId');\r",
@@ -2171,284 +2657,9 @@
 								}
 							},
 							"response": []
-						},
-						{
-							"name": "Edit post",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"\r",
-											"const formData = {\r",
-											"    username: pm.collectionVariables.get('usertest1'),\r",
-											"    password: pm.collectionVariables.get('password1')\r",
-											"};\r",
-											"    console.log(formData);\r",
-											"\r",
-											"// Define the POST request configuration\r",
-											"const postRequestConfig = {\r",
-											"    method: 'POST',\r",
-											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
-											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
-											"    body: {\r",
-											"        mode: 'formdata',\r",
-											"        formdata: [\r",
-											"            { key: 'username', value: formData.username },\r",
-											"            { key: 'password', value: formData.password }\r",
-											"        ]\r",
-											"    }\r",
-											"};\r",
-											"\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
-											"    if (err) {\r",
-											"        console.error(err);\r",
-											"        // Handle the error if needed\r",
-											"    } else {\r",
-											"        var jsonData = response.json();\r",
-											"        console.log(jsonData);\r",
-											"\r",
-											"        // Access the response JSON directly\r",
-											"        var responseJson = response.json();\r",
-											"\r",
-											"        // Extract the ID of the newest post\r",
-											"        var newestPostId = responseJson.postId;\r",
-											"\r",
-											"        // Log the ID of the newest post\r",
-											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
-											"\r",
-											"        // You can also set a Postman environment variable with the result\r",
-											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
-											"    }\r",
-											"});\r",
-											"\r",
-											"// create 100 symbols message\r",
-											"const hundredSymbols = Array(14).fill('edited ').join('');\r",
-											"pm.collectionVariables.set('hundred_symbols_edited', hundredSymbols);"
-										],
-										"type": "text/javascript",
-										"id": "01b09295-d4a3-49fd-b394-e4eccabfca5b"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"getPost\"), function (response) {\r",
-											"    pm.test(\"Status code is 200\", function () {\r",
-											"        pm.expect(response).to.have.status(200);\r",
-											"    });\r",
-											"\r",
-											"    if (response && response.json && typeof response.json === 'function') {\r",
-											"        var jsonData = response.json();\r",
-											"        pm.test(\"Id in response\", function () {\r",
-											"            pm.expect(jsonData.postId).to.not.null;\r",
-											"        });\r",
-											"\r",
-											"        var postcontent = pm.collectionVariables.get('hundred_symbols');\r",
-											"        pm.test(\"Content in response\", function () {\r",
-											"            pm.expect(jsonData.content).to.equal(postcontent);\r",
-											"        });\r",
-											"    } else {\r",
-											"        pm.test(\"Response body is empty\", function () {\r",
-											"            pm.expect.fail(\"Response body is empty\");\r",
-											"        });\r",
-											"    }\r",
-											"});\r",
-											"\r",
-											"\r",
-											"var newestPostId = pm.collectionVariables.get('newestPostId');\r",
-											"pm.sendRequest({\r",
-											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?postId=${newestPostId}`,\r",
-											"    method: 'DELETE',\r",
-											"    header:{\r",
-											"        'Content-Type':'application/json',\r",
-											"    }\r",
-											"});\r",
-											"\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"id": "ad260945-abe1-4bf9-833d-1d6b88bb0d8f"
-									}
-								}
-							],
-							"id": "7b00d074-4189-4240-830d-ce4ea466031e",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"content\": \"{{hundred_symbols_edited}}\",\r\n  \"picture\": \"https://content.api.news/v3/images/bin/eb46d3099a5f3b45b4b1b0f4deae1d0a\",\r\n  \"public\": true\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseurl}}/api/post/auth/editor?name={{usertest1}}&postId={{newestPostId}}",
-									"host": [
-										"{{baseurl}}"
-									],
-									"path": [
-										"api",
-										"post",
-										"auth",
-										"editor"
-									],
-									"query": [
-										{
-											"key": "name",
-											"value": "{{usertest1}}"
-										},
-										{
-											"key": "postId",
-											"value": "{{newestPostId}}"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete post",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "fc41de6c-3f70-4a1d-a58d-e8f46865859d",
-										"exec": [
-											"\r",
-											"const formData = {\r",
-											"    username: pm.collectionVariables.get('usertest1'),\r",
-											"    password: pm.collectionVariables.get('password1')\r",
-											"};\r",
-											"    console.log(formData);\r",
-											"\r",
-											"// Define the POST request configuration\r",
-											"const postRequestConfig = {\r",
-											"    method: 'POST',\r",
-											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
-											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
-											"    body: {\r",
-											"        mode: 'formdata',\r",
-											"        formdata: [\r",
-											"            { key: 'username', value: formData.username },\r",
-											"            { key: 'password', value: formData.password }\r",
-											"        ]\r",
-											"    }\r",
-											"};\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
-											"    if (err) {\r",
-											"        console.error(err);\r",
-											"        // Handle the error if needed\r",
-											"    } else {\r",
-											"        var jsonData = response.json();\r",
-											"        console.log(jsonData);\r",
-											"\r",
-											"        // Access the response JSON directly\r",
-											"        var responseJson = response.json();\r",
-											"\r",
-											"        // Extract the ID of the newest post\r",
-											"        var newestPostId = responseJson.postId;\r",
-											"\r",
-											"        // Log the ID of the newest post\r",
-											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
-											"\r",
-											"        // You can also set a Postman environment variable with the result\r",
-											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
-											"    }\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"id": "465eb436-d207-43aa-90ea-e5fc1ed83a5d",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"var deletedPostId=pm.collectionVariables.get('newestPostId');\r",
-											"\r",
-											"pm.sendRequest({\r",
-											"       url: `${pm.collectionVariables.get('baseurl')}/api/post/}`,\r",
-											"    method: 'GET',\r",
-											"    header:{\r",
-											"        'Content-Type':'application/json',\r",
-											"    }\r",
-											"}, function(err,response){\r",
-											"    if (err){\r",
-											"        console.error(err);\r",
-											"    } else{\r",
-											"        var jsonData = response.json();\r",
-											"        console.log(jsonData);  \r",
-											"\r",
-											"        // Extract the ID of the newest post\r",
-											"        var newestPostId = jsonData.postId;\r",
-											"\r",
-											"        // Log the ID of the newest post\r",
-											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
-											"\r",
-											"        // You can also set a Postman environment variable with the result\r",
-											"        pm.collectionVariables.set(\"newestPostId\", newestPostId);\r",
-											"\r",
-											"pm.test(\"Post is deleted\", function () {\r",
-											"    pm.expect(jsonData.postId).to.not.equal(deletedPostId);\r",
-											"});\r",
-											"    }\r",
-											"});\r",
-											"pm.collectionVariables.set(\"deletePost\", pm.request)"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "9e94b341-38f7-48dc-a09e-eb19578c896e",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{baseurl}}/api/post/auth/manager?postId={{newestPostId}}",
-									"host": [
-										"{{baseurl}}"
-									],
-									"path": [
-										"api",
-										"post",
-										"auth",
-										"manager"
-									],
-									"query": [
-										{
-											"key": "postId",
-											"value": "{{newestPostId}}"
-										}
-									]
-								}
-							},
-							"response": []
 						}
 					],
-					"id": "92d33ffb-bd5e-4ed8-8639-56a0b1f572aa"
+					"id": "cc7349cd-c372-437d-81c2-eaa9168c190c"
 				}
 			],
 			"id": "f2f5414e-3a64-48bf-adea-c4512b0b1878"
@@ -2459,58 +2670,6 @@
 				{
 					"name": "CRUD",
 					"item": [
-						{
-							"name": "Find All Comments",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "cf60b945-4dec-48df-9060-eee5e7996712",
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"id": "14db6032-a337-45f9-b3a0-7c72889e83a8",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"let jsonData = pm.response.json();\r",
-											"\r",
-											"let commentsCount = jsonData.length;\r",
-											"console.log(commentsCount)\r",
-											"pm.collectionVariables.set(\"commentsCount\", commentsCount);\r",
-											"pm.collectionVariables.set(\"findAllComments\", pm.request);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "d1332629-9040-45f1-83ee-483763fbcd83",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseurl}}/api/comment",
-									"host": [
-										"{{baseurl}}"
-									],
-									"path": [
-										"api",
-										"comment"
-									]
-								}
-							},
-							"response": []
-						},
 						{
 							"name": "Create Comment",
 							"event": [
@@ -2545,12 +2704,12 @@
 											"        console.error(err);\r",
 											"        // Handle the error if needed\r",
 											"    } else {\r",
-											"        findallComments;\r",
+											"        findallComments();\r",
 											"        createPost();\r",
 											"    }\r",
 											"});\r",
 											"\r",
-											"findallComments();\r",
+											"// findallComments();\r",
 											"\r",
 											"function findallComments() {pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
 											"    if (err) {\r",
@@ -2618,7 +2777,7 @@
 											"var commentsCountPrevious = pm.collectionVariables.get(\"commentsCount\");\r",
 											"console.log(\"Previous comments count after comment creation: \" + commentsCountPrevious);\r",
 											"\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"getAllComments\"), function (err, response) {\r",
 											"    if (err) {\r",
 											"        console.error(err);\r",
 											"        // Handle the error if needed\r",
@@ -2684,14 +2843,171 @@
 							"response": []
 						},
 						{
-							"name": "Edit Comment",
+							"name": "Get All Comments",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "cf60b945-4dec-48df-9060-eee5e7996712",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "14db6032-a337-45f9-b3a0-7c72889e83a8",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var responseBody = pm.response.json();\r",
+											"pm.test(\"Response is an array\", function () {\r",
+											"    \r",
+											"    pm.expect(Array.isArray(responseBody)).to.be.true;\r",
+											"});\r",
+											"\r",
+											"var commentsCount = responseBody.length;\r",
+											"pm.collectionVariables.set(\"commentsCount\", commentsCount);\r",
+											"pm.collectionVariables.set(\"getAllComments\", pm.request);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "d1332629-9040-45f1-83ee-483763fbcd83",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/comment",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Comment by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "dea11c61-2498-461a-9ff5-e8424e2ef247",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var responseBody = pm.response.json();",
+											"pm.test(\"Comment Ids match.\", function () {",
+											"    pm.expect(responseBody.commentId).to.eql(pm.collectionVariables.get('newestCommentId'), \"IDs of comments do not match.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "d3f9fe95-d97e-44a1-b34f-ae7640a70e7e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/comment/single?commentId={{newestCommentId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"single"
+									],
+									"query": [
+										{
+											"key": "commentId",
+											"value": "{{newestCommentId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Comment by Post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "30ff21d9-97c8-42fd-a420-bf5d0be11cea",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is an array\", function () {",
+											"    // Parse the response JSON",
+											"    var responseBody = pm.response.json();",
+											"    ",
+											"    // Check if the response is an array",
+											"    pm.expect(Array.isArray(responseBody)).to.be.true;",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "be77b72c-64d0-489b-84ba-de5ed2af8d02",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/comment/byPost?postId={{newestPostId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"byPost"
+									],
+									"query": [
+										{
+											"key": "postId",
+											"value": "{{newestPostId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Comment",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"id": "73743a7e-06c8-45b4-849d-1ccd6b167b26",
 										"exec": [
-											"const hundredSymbolsEditComment = Array(7).fill('edited comment ').join('');\r",
+											"const hundredSymbolsEditComment = Array(7).fill('edited comment').join('');\r",
 											"pm.collectionVariables.set('hundred_symbols_edited_comment', hundredSymbolsEditComment);\r",
 											"\r",
 											"const formData = {\r",
@@ -2737,8 +3053,6 @@
 											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestCommentId\", newestCommentId);}\r",
 											"        \r",
 											"        setNewestCommentId();\r",
-											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
-											"        console.log(pm.collectionVariables.get(\"newestCommentId\"));\r",
 											"    }\r",
 											"});}\r",
 											"\r",
@@ -2763,8 +3077,6 @@
 											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}\r",
 											"        \r",
 											"        setNewestCommentId();\r",
-											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
-											"        console.log(pm.collectionVariables.get(\"newestPostId\"));\r",
 											"    }\r",
 											"});}"
 										],
@@ -2780,26 +3092,27 @@
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"getPost\"), function (response) {\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (error, response) {\r",
+											"    if (error) {\r",
+											"        pm.test(\"Request failed\", function () {\r",
+											"            pm.expect.fail(\"Request failed\");\r",
+											"        });\r",
+											"        return;\r",
+											"    } \r",
+											"\r",
 											"    pm.test(\"Status code is 200\", function () {\r",
 											"        pm.expect(response).to.have.status(200);\r",
 											"    });\r",
 											"\r",
-											"    if (response && response.json && typeof response.json === 'function') {\r",
-											"        var jsonData = response.json();\r",
-											"        pm.test(\"Id in response\", function () {\r",
-											"            pm.expect(jsonData.commentId).to.not.null;\r",
-											"        });\r",
+											"    var comments = response.json();\r",
+											"    console.log(comments);\r",
 											"\r",
-											"        var commentContent = pm.collectionVariables.get('hundred_symbols_edited_comment');\r",
-											"        pm.test(\"Content in response\", function () {\r",
-											"            pm.expect(jsonData.content).to.equal(commentContent);\r",
-											"        });\r",
-											"    } else {\r",
-											"        pm.test(\"Response body is empty\", function () {\r",
-											"            pm.expect.fail(\"Response body is empty\");\r",
-											"        });\r",
-											"    }\r",
+											"    var foundComment = comments.find( comment => comment.commentId === pm.collectionVariables.get('newestCommentId'));\r",
+											"\r",
+											"    var commentContent = pm.collectionVariables.get('hundred_symbols_edited_comment');\r",
+											"    pm.test(\"Content in response\", function () {\r",
+											"        pm.expect(foundComment.content).to.eql(commentContent);\r",
+											"    });\r",
 											"});\r",
 											"\r",
 											"var newestCommentId = pm.collectionVariables.get('newestCommentId');\r",
@@ -2873,6 +3186,7 @@
 											"    username: pm.collectionVariables.get('username'),\r",
 											"    password: pm.collectionVariables.get('password')\r",
 											"};\r",
+											"\r",
 											"const postRequestConfig = {\r",
 											"    method: 'POST',\r",
 											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
@@ -2888,56 +3202,50 @@
 											"\r",
 											"pm.sendRequest(postRequestConfig, function (err, response) {\r",
 											"    createComment();\r",
-											"    findallComments();\r",
 											"});\r",
 											"\r",
-											"function findallComments() {pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
-											"    if (err) {\r",
-											"        console.error(err);\r",
-											"        // Handle the error if needed\r",
-											"    } else {\r",
-											"        var jsonData = response.json();\r",
-											"        console.log(jsonData);\r",
+											"function findAllComments() {\r",
+											"    pm.sendRequest(pm.collectionVariables.get(\"getAllComments\"), function (err, response) {\r",
+											"        if (err) {\r",
+											"            console.error(err);\r",
+											"            // Handle the error if needed\r",
+											"        } else {\r",
+											"            // Access the response JSON directly\r",
+											"            var responseJson = response.json();\r",
 											"\r",
-											"        // Access the response JSON directly\r",
-											"        var responseJson = response.json();\r",
+											"            // count elements in array\r",
+											"            var commentsCount = responseJson.length;\r",
 											"\r",
-											"        // Extract the ID of the newest post\r",
-											"        var commentsCount = responseJson.length;\r",
+											"            console.log(\"The current comments count is \" + commentsCount);\r",
 											"\r",
-											"        // Log the ID of the newest post\r",
-											"        console.log(\"The current comments count is \" + commentsCount);\r",
+											"            pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
+											"        }\r",
+											"    });\r",
+											"}\r",
 											"\r",
-											"        // You can also set a Postman environment variable with the result\r",
-											"        pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
-											"    }\r",
-											"});}\r",
+											"function createComment() {\r",
+											"    pm.sendRequest(pm.collectionVariables.get(\"commentCreate\"), function (err, response) {\r",
+											"        if (err) {\r",
+											"            console.error(err);\r",
+											"            // Handle the error if needed\r",
+											"        } else {\r",
+											"            var jsonData = response.json();\r",
+											"            console.log(jsonData);\r",
 											"\r",
-											"function createComment() {pm.sendRequest(pm.collectionVariables.get(\"commentCreate\"), function (err, response) {\r",
-											"    if (err) {\r",
-											"        console.error(err);\r",
-											"        // Handle the error if needed\r",
-											"    } else {\r",
-											"        var jsonData = response.json();\r",
-											"        console.log(jsonData);\r",
+											"            // Access the response JSON directly\r",
+											"            var responseJson = response.json();\r",
 											"\r",
-											"        // Access the response JSON directly\r",
-											"        var responseJson = response.json();\r",
+											"            // Extract the ID of the newest post\r",
+											"            var newestCommentId = responseJson.commentId;\r",
 											"\r",
-											"        // Extract the ID of the newest post\r",
-											"        var newestCommentId = responseJson.commentId;\r",
+											"            // Log the ID of; the newest post\r",
+											"            console.log(\"The ID of the comment with the newest date is: \" + newestCommentId);\r",
 											"\r",
-											"        // Log the ID of; the newest post\r",
-											"        console.log(\"The ID of the comment with the newest date is: \" + newestCommentId);\r",
-											"\r",
-											"        // You can also set a Postman environment variable with the result\r",
-											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestCommentId\", newestCommentId);}\r",
-											"        \r",
-											"        setNewestCommentId();\r",
-											"        console.log(pm.collectionVariables.get(\"userID\"));\r",
-											"        console.log(pm.collectionVariables.get(\"newestCommentId\"));\r",
-											"    }\r",
-											"});}"
+											"            pm.collectionVariables.set(\"newestCommentId\", newestCommentId);            \r",
+											"            findAllComments();\r",
+											"        }\r",
+											"    });\r",
+											"}"
 										],
 										"type": "text/javascript"
 									}
@@ -2951,20 +3259,13 @@
 											"    pm.response.to.have.status(200);\r",
 											"});\r",
 											"\r",
-											"console.log(pm.response.json());\r",
-											"\r",
-											"var commentsCountPrevious = pm.collectionVariables.get(\"commentsCount\");\r",
+											"var commentsCountPrevious = pm.collectionVariables.get(\"previousCommentsCount\");\r",
 											"console.log(\"Previous comments count after comment creation: \" + commentsCountPrevious);\r",
 											"\r",
-											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"getAllComments\"), function (err, response) {\r",
 											"    if (err) {\r",
 											"        console.error(err);\r",
-											"        // Handle the error if needed\r",
 											"    } else {\r",
-											"        var jsonData = response.json();\r",
-											"        console.log(jsonData);\r",
-											"\r",
-											"        // Access the response JSON directly\r",
 											"        var responseJson = response.json();\r",
 											"\r",
 											"        // Extract the ID of the newest post\r",
@@ -2973,17 +3274,13 @@
 											"        // Log the ID of the newest post\r",
 											"        console.log(\"The new comments count is \" + commentsCount);\r",
 											"\r",
-											"        // You can also set a Postman environment variable with the result\r",
-											"        function setCommentsCommentsCount() {pm.collectionVariables.set(\"commentsCount\", commentsCount);}\r",
-											"        setCommentsCommentsCount();\r",
-											"\r",
 											"        pm.test(\"Comments count is updated\", function () {\r",
-											"            pm.expect(pm.collectionVariables.get(\"previousCommentsCount\") + 1).to.eql(commentsCount);\r",
+											"            pm.expect(commentsCount+1).to.eql(commentsCountPrevious);\r",
 											"        });\r",
 											"    }\r",
 											"});\r",
-											"pm.collectionVariables.set(\"newestCommentId\", pm.response.json().commentId);\r",
-											"pm.collectionVariables.set(\"commentCreate\", pm.request);"
+											"// pm.collectionVariables.set(\"newestCommentId\", pm.response.json().commentId);\r",
+											"// pm.collectionVariables.set(\"commentCreate\", pm.request);"
 										],
 										"type": "text/javascript"
 									}
@@ -3023,69 +3320,69 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "04111b72-fa62-4732-bf7a-cf6548a95c7e",
+								"id": "7960ccd0-e6d3-4b2a-8b47-5ff8419db615",
 								"type": "text/javascript",
 								"exec": [
 									"",
 									"",
-									"pm.sendRequest(pm.collectionVariables.get(\"registerUser\"), function (err, response) {",
-									"if (err) {",
-									"        console.error(err);",
-									"        // Handle the error if needed",
-									"    } else {",
-									"        var jsonData = response.json();",
-									"        console.log(jsonData.body);",
+									"// pm.sendRequest(pm.collectionVariables.get(\"registerUser\"), function (err, response) {",
+									"// if (err) {",
+									"//         console.error(err);",
+									"//         // Handle the error if needed",
+									"//     } else {",
+									"//         var jsonData = response.json();",
+									"//         console.log(jsonData.body);",
 									"",
-									"    const formData = {",
-									"    username: pm.collectionVariables.get('username'),",
-									"    password: pm.collectionVariables.get('password')};",
+									"//     const formData = {",
+									"//     username: pm.collectionVariables.get('username'),",
+									"//     password: pm.collectionVariables.get('password')};",
 									"",
-									"// Define the POST request configuration",
-									"const postRequestConfig = {",
-									"    method: 'POST',",
-									"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
-									"    header: 'Content-Type: application/x-www-form-urlencoded',",
-									"    body: {",
-									"        mode: 'formdata',",
-									"        formdata: [",
-									"            { key: 'username', value: formData.username },",
-									"            { key: 'password', value: formData.password }",
-									"        ]",
-									"    }",
-									"};",
+									"// // Define the POST request configuration",
+									"// const postRequestConfig = {",
+									"//     method: 'POST',",
+									"//     url: `${pm.collectionVariables.get('baseurl')}/authenticate`,",
+									"//     header: 'Content-Type: application/x-www-form-urlencoded',",
+									"//     body: {",
+									"//         mode: 'formdata',",
+									"//         formdata: [",
+									"//             { key: 'username', value: formData.username },",
+									"//             { key: 'password', value: formData.password }",
+									"//         ]",
+									"//     }",
+									"// };",
 									"",
-									"        pm.sendRequest(postRequestConfig);",
-									"        createPost();",
+									"//         pm.sendRequest(postRequestConfig);",
+									"//         createPost();",
 									"",
-									"    }",
-									"});",
+									"//     }",
+									"// });",
 									"",
-									"function authenticateUser() {pm.sendRequest(collectionVariables.get(\"authUser\"));}",
+									"// function authenticateUser() {pm.sendRequest(collectionVariables.get(\"authUser\"));}",
 									"",
-									"function createPost() {pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {",
-									"    if (err) {",
-									"        console.error(err);",
-									"        // Handle the error if needed",
-									"    } else {",
-									"        var jsonData = response.json();",
-									"        console.log(jsonData);",
+									"// function createPost() {pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {",
+									"//     if (err) {",
+									"//         console.error(err);",
+									"//         // Handle the error if needed",
+									"//     } else {",
+									"//         var jsonData = response.json();",
+									"//         console.log(jsonData);",
 									"",
-									"        // Access the response JSON directly",
-									"        var responseJson = response.json();",
+									"//         // Access the response JSON directly",
+									"//         var responseJson = response.json();",
 									"",
-									"        // Extract the ID of the newest post",
-									"        var newestPostId = responseJson.postId;",
+									"//         // Extract the ID of the newest post",
+									"//         var newestPostId = responseJson.postId;",
 									"",
-									"        // Log the ID of; the newest post",
-									"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);",
+									"//         // Log the ID of; the newest post",
+									"//         console.log(\"The ID of the post with the newest date is: \" + newestPostId);",
 									"",
-									"        // You can also set a Postman environment variable with the result",
-									"        function setNewestPostId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}",
-									"        function setNewestCommentPostId() {pm.collectionVariables.set(\"commentCreatedPostId\", newestPostId);}",
-									"        setNewestPostId();",
-									"        setNewestCommentPostId();",
-									"    }",
-									"});}",
+									"//         // You can also set a Postman environment variable with the result",
+									"//         function setNewestPostId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}",
+									"//         function setNewestCommentPostId() {pm.collectionVariables.set(\"commentCreatedPostId\", newestPostId);}",
+									"//         setNewestPostId();",
+									"//         setNewestCommentPostId();",
+									"//     }",
+									"// });}",
 									"",
 									""
 								]
@@ -3094,7 +3391,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9785076f-75f8-4918-8334-0a0cb88846c0",
+								"id": "b0258a7e-7212-4ffd-9908-6304ceecd8b9",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -3102,6 +3399,274 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "Like a comment",
+					"item": [
+						{
+							"name": "Create Comment",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "0de6f6bf-35f4-476b-acf1-a7c79bf0e00c",
+										"exec": [
+											"// create 100 symbols message\r",
+											"const hundredSymbols = Array(14).fill('comment ').join('');\r",
+											"pm.collectionVariables.set('hundred_symbols_comment', hundredSymbols);\r",
+											"\r",
+											"const formData = {\r",
+											"    username: pm.collectionVariables.get('username'),\r",
+											"    password: pm.collectionVariables.get('password')\r",
+											"};\r",
+											"const postRequestConfig = {\r",
+											"    method: 'POST',\r",
+											"    url: `${pm.collectionVariables.get('baseurl')}/authenticate`,\r",
+											"    header: 'Content-Type: application/x-www-form-urlencoded',\r",
+											"    body: {\r",
+											"        mode: 'formdata',\r",
+											"        formdata: [\r",
+											"            { key: 'username', value: formData.username },\r",
+											"            { key: 'password', value: formData.password }\r",
+											"        ]\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(postRequestConfig, function (err, response) {\r",
+											"if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        findallComments();\r",
+											"        createPost();\r",
+											"    }\r",
+											"});\r",
+											"\r",
+											"// findallComments();\r",
+											"\r",
+											"function findallComments() {pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var commentsCount = responseJson.length;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The current comments count is \" + commentsCount);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
+											"\r",
+											"    }\r",
+											"});}\r",
+											"\r",
+											"function createPost() {pm.sendRequest(pm.collectionVariables.get(\"postCreate\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var newestPostId = responseJson.postId;\r",
+											"\r",
+											"        // Log the ID of; the newest post\r",
+											"        console.log(\"The ID of the post with the newest date is: \" + newestPostId);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setNewestCommentId() {pm.collectionVariables.set(\"newestPostId\", newestPostId);}\r",
+											"        \r",
+											"        setNewestCommentId();\r",
+											"    }\r",
+											"});}"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "b12d81bc-5c3c-4f31-a516-28ca64ca10c1",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"console.log(pm.response.json());\r",
+											"\r",
+											"var commentsCountPrevious = pm.collectionVariables.get(\"commentsCount\");\r",
+											"console.log(\"Previous comments count after comment creation: \" + commentsCountPrevious);\r",
+											"\r",
+											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.error(err);\r",
+											"        // Handle the error if needed\r",
+											"    } else {\r",
+											"        var jsonData = response.json();\r",
+											"        console.log(jsonData);\r",
+											"\r",
+											"        // Access the response JSON directly\r",
+											"        var responseJson = response.json();\r",
+											"\r",
+											"        // Extract the ID of the newest post\r",
+											"        var commentsCount = responseJson.length;\r",
+											"\r",
+											"        // Log the ID of the newest post\r",
+											"        console.log(\"The new comments count is \" + commentsCount);\r",
+											"\r",
+											"        // You can also set a Postman environment variable with the result\r",
+											"        function setCommentsCommentsCount() {pm.collectionVariables.set(\"commentsCount\", commentsCount);}\r",
+											"        setCommentsCommentsCount();\r",
+											"\r",
+											"        pm.test(\"Comments count is updated\", function () {\r",
+											"            pm.expect(pm.collectionVariables.get(\"previousCommentsCount\") + 1).to.eql(commentsCount);\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											"pm.collectionVariables.set(\"newestCommentId\", pm.response.json().commentId);\r",
+											"pm.collectionVariables.set(\"commentCreate\", pm.request);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "b957e335-53ef-4eda-a24d-e57a17681abf",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"commentId\": 0,\r\n  \"content\": \"{{hundred_symbols_comment}}\",\r\n  \"deletedConfirmed\": true,\r\n  \"postId\": {{newestPostId}},\r\n  \"userId\": {{userID}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseurl}}/api/comment/auth/creator",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"auth",
+										"creator"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Like a comment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "295577d6-226b-4ba1-84c5-6b51e1d46a6d",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Liked Field is True\", function () {",
+											"    var likedValue = pm.response.json().liked;",
+											"    pm.expect(likedValue).to.be.true;",
+											"});",
+											"",
+											"// var responseBody = response.json();",
+											"pm.test(\"Likes have increased by 1\", function () {",
+											"    pm.expect(pm.response.json().likes.length).to.be.eql(pm.collectionVariables.get('commentLikes')+1);",
+											"});",
+											"",
+											"var newestCommentId = pm.collectionVariables.get('newestCommentId');",
+											"pm.sendRequest({",
+											"    url: `${pm.collectionVariables.get('baseurl')}/api/post/auth/manager?commentId=${newestCommentId}`,",
+											"    method: 'DELETE',",
+											"    header:{",
+											"        'Content-Type':'application/json',",
+											"    }",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "bb37523d-dc20-4ebf-b5b7-1214eda26b0c",
+										"exec": [
+											"pm.sendRequest(pm.collectionVariables.get(\"findAllComments\"), function (error, response) {",
+											"    if (error) {",
+											"        pm.test(\"Request failed\", function () {",
+											"            pm.expect.fail(\"Request failed\");",
+											"        });",
+											"        return;",
+											"    } ",
+											"",
+											"    pm.test(\"Status code is 200\", function () {",
+											"        pm.expect(response).to.have.status(200);",
+											"    });",
+											"",
+											"    var comments = response.json();",
+											"",
+											"    var foundComment = comments.find( comment => comment.commentId === pm.collectionVariables.get('newestCommentId'));",
+											"",
+											"    pm.collectionVariables.set(\"commentLikes\", foundComment.likes.length);",
+											"    console.log(foundComment.likes.length);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "ccfca7bd-24d3-48f5-ae8d-471b392a1251",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/comment/auth/likesUp?commentId={{newestCommentId}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"comment",
+										"auth",
+										"likesUp"
+									],
+									"query": [
+										{
+											"key": "commentId",
+											"value": "{{newestCommentId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "0f7c1a29-294e-4554-9988-9d7e3268d984"
 				}
 			],
 			"id": "38039d88-1591-4e5a-b748-6f746e833f03"
@@ -3126,7 +3691,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "6f9776fc-d708-4367-9e81-a115dc9be1b0",
+				"id": "ff595851-942b-4f71-bc6f-53ce72701ffc",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3136,7 +3701,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "5b0df5c5-3d5d-4e8d-bad3-94326099ec17",
+				"id": "1d5a88a3-1dea-46cd-a2e1-7e7fe11609ee",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3146,173 +3711,198 @@
 	],
 	"variable": [
 		{
-			"id": "56be93cc-083b-4de5-9a33-041c366fc40f",
-			"key": "password",
-			"value": "123456*A"
-		},
-		{
-			"id": "a7ba0ecd-2b74-43f5-b400-b5cbb17f131b",
+			"id": "f6f3fb6e-d8a4-4315-94b1-aa983578f09f",
 			"key": "baseurl",
-			"value": "http://localhost:8081"
+			"value": "http://84.21.205.241:8081"
 		},
 		{
-			"id": "408c1f2a-b53a-43a1-a519-b04b6d89d601",
+			"id": "db9a741f-360f-41b2-9717-df976a6ff889",
+			"key": "username",
+			"value": ""
+		},
+		{
+			"id": "e9756419-5427-4a79-9828-7cb0935aa44f",
 			"key": "email",
 			"value": ""
 		},
 		{
-			"id": "b84da263-1142-48b6-bce6-91e11dbf122e",
+			"id": "b2e7ab8f-94ab-42e4-8002-5cb28034cf5b",
+			"key": "password",
+			"value": "123456*A"
+		},
+		{
+			"id": "0d15b510-4c08-4dd6-a4a8-8cc7b26d4825",
 			"key": "userID",
 			"value": "41"
 		},
 		{
-			"id": "0467a37d-6b5b-473b-8273-bc501cd0acf7",
+			"id": "b70bcc7a-7277-4352-8797-5b60a2be9a2a",
 			"key": "randomNumber",
 			"value": ""
 		},
 		{
-			"id": "218b12ec-2c5f-45db-aa84-c8f5532ed301",
+			"id": "c0df15e4-2b47-4468-8b30-78b705334c6a",
 			"key": "userExpertise",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "f1ae59bc-c4de-422b-8f45-00effc044398",
-			"key": "user_firstName",
-			"value": ""
-		},
-		{
-			"id": "5409fabb-0d09-4919-a464-0ac291cf71f1",
-			"key": "cityData",
-			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
-			"type": "string"
-		},
-		{
-			"id": "e1ef5a46-ceca-4f8b-941b-fcd5281ad811",
+			"id": "aa996f46-d177-4182-8996-353c25c8680c",
 			"key": "user_lastName",
 			"value": ""
 		},
 		{
-			"id": "51c5c4da-6b2d-4ecd-b358-4e89458500a6",
-			"key": "city_name",
-			"value": ""
-		},
-		{
-			"id": "b023cc3e-c23e-42eb-8a6c-88497c9d1361",
-			"key": "city_id",
-			"value": ""
-		},
-		{
-			"id": "4fc1bed6-7ede-4c4c-963d-6d626705b6a4",
-			"key": "user_birthDate",
-			"value": ""
-		},
-		{
-			"id": "c3a4e354-cde6-41aa-a4d2-28af77a702f3",
+			"id": "27b60eff-3772-49c9-bddd-19472c749bf3",
 			"key": "user_fullName",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "a1b43637-835a-4327-9943-a25b0281f767",
-			"key": "user_sex",
+			"id": "25ed1ab2-d738-4784-8ef0-e6e4c08c0751",
+			"key": "user_birthDate",
 			"value": ""
 		},
 		{
-			"id": "6396a862-25bb-4444-9e1a-191ca973df91",
+			"id": "6f2a745a-3117-467c-9806-1e6238843143",
 			"key": "user_picturePrivacy",
 			"value": ""
 		},
 		{
-			"id": "b7480bf1-e903-4235-a999-6a8a4ddb0e17",
-			"key": "username",
+			"id": "40b6db70-302a-4c68-93b0-565bc17274c4",
+			"key": "user_firstName",
 			"value": ""
 		},
 		{
-			"id": "87ab1c42-54e9-4a31-9eff-d5154ef2975b",
+			"id": "db8e680d-a2c1-47fa-bcf4-5636f84c8888",
+			"key": "cityData",
+			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
+			"type": "string"
+		},
+		{
+			"id": "f41d6859-0c33-4d6e-bfab-c35bc0060354",
+			"key": "city_name",
+			"value": ""
+		},
+		{
+			"id": "eb6e9185-5bd3-4b4b-9a6c-31bba98c1982",
+			"key": "city_id",
+			"value": ""
+		},
+		{
+			"id": "17f8437b-1af6-4e8f-a6b0-f656512bce0a",
+			"key": "user_sex",
+			"value": ""
+		},
+		{
+			"id": "e9aba2d8-bcbd-4671-af70-c3cfb4821e9f",
 			"key": "requestId",
 			"value": ""
 		},
 		{
-			"id": "97f9a08d-2877-4432-9bfc-5ad5cebef306",
+			"id": "2333766f-6e44-4855-a500-c41005dee661",
 			"key": "senderUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "45d8d2d7-2ae0-4301-a0b7-2b083eeb2674",
+			"id": "d6752f17-69da-4338-9a9f-f490c7036784",
 			"key": "recipientUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "ec0b55f3-be32-49ee-a592-9519137b85ad",
+			"id": "881aba83-c63c-40a0-9bf3-b10df25c4a40",
 			"key": "deletePost",
 			"value": ""
 		},
 		{
-			"id": "2d689166-ecfa-4846-85c4-0bbe858fb4d0",
+			"id": "12e97309-ddb8-4ffe-82d6-9a0f1b191b76",
 			"key": "newestPostId",
 			"value": ""
 		},
 		{
-			"id": "9fab36a4-e224-4d8e-aedb-309101c0fc14",
+			"id": "238e6cf8-e04c-49d4-88cf-b533e75efa38",
 			"key": "authUser",
 			"value": ""
 		},
 		{
-			"id": "963028b0-6998-41fd-97df-93aaf61bec09",
+			"id": "2ef97b37-95e7-438c-a8da-fbbcde0ec55e",
 			"key": "hundred_symbols",
 			"value": ""
 		},
 		{
-			"id": "f1f66c64-05cc-488f-8e05-2f1dc2c459ad",
+			"id": "5b67f4f8-1957-4d9f-b175-823f2d4d544f",
 			"key": "postCreate",
 			"value": ""
 		},
 		{
-			"id": "9af25b78-db30-4655-afa9-85e512167526",
+			"id": "99a41b1b-dd68-41d8-9e03-96ddf4f74541",
 			"key": "getPost",
 			"value": ""
 		},
 		{
-			"id": "de1e951a-c9ec-45a7-abb1-4a80b0b01b7c",
+			"id": "82d08ece-1539-45d0-899e-c59cb60985ba",
 			"key": "hundred_symbols_edited",
 			"value": ""
 		},
 		{
-			"id": "f6db98bf-9d82-4a35-bdc5-040c0c621732",
+			"id": "b546f1cf-0464-4727-8729-8864c2f0a6ef",
 			"key": "commentsCount",
 			"value": ""
 		},
 		{
-			"id": "0fa0ad15-067c-4c0c-8d4e-09da8d7a4c3f",
+			"id": "5960b821-04c7-4267-aed9-9839dba36402",
 			"key": "findAllComments",
 			"value": ""
 		},
 		{
-			"id": "50265931-2626-46a7-aebb-897e426bf4ec",
+			"id": "ffedb9b4-6dd9-4dcb-8805-61408e59741d",
 			"key": "hundred_symbols_comment",
 			"value": ""
 		},
 		{
-			"id": "ed8035e3-f763-427e-9db8-09b8e31b0d56",
+			"id": "54e5f09f-ead2-47fa-bed3-93e26a3f8ad0",
 			"key": "previousCommentsCount",
 			"value": ""
 		},
 		{
-			"id": "d8b1e1e7-fa07-42dc-8eef-962bb989383f",
+			"id": "109ac452-cb0d-4082-8746-7c0e063c7ed8",
 			"key": "newestCommentId",
 			"value": ""
 		},
 		{
-			"id": "d747d2f0-fe05-4995-aebe-a3f6fb514a43",
+			"id": "667e3bcc-fc09-4860-8564-be8a8c6c3783",
 			"key": "commentCreate",
 			"value": ""
 		},
 		{
-			"id": "083b4ddb-d6cd-44f6-96e1-e69cfb61c004",
+			"id": "28438210-a62c-476b-9325-cbb97bda5b1b",
 			"key": "hundred_symbols_edited_comment",
+			"value": ""
+		},
+		{
+			"id": "7925f623-f1a6-45fc-8447-50ad1b896da6",
+			"key": "commentLikes",
+			"value": ""
+		},
+		{
+			"id": "6bd147f4-c1f4-418f-b1b3-03954df99b7a",
+			"key": "skill1",
+			"value": ""
+		},
+		{
+			"id": "774f1195-8343-4630-a050-ac0f3ebcefd5",
+			"key": "skill2",
+			"value": ""
+		},
+		{
+			"id": "211b1183-9465-48a2-9905-8b17f601bfa7",
+			"key": "skill3",
+			"value": ""
+		},
+		{
+			"id": "6f8b221a-d101-4de8-91d0-ce924698364f",
+			"key": "getAllComments",
 			"value": ""
 		}
 	]

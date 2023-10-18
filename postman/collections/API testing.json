@@ -721,7 +721,7 @@
 													"// Set random city",
 													"// Parse the CSV content from the environment variable",
 													"const cityCSV = pm.collectionVariables.get(\"cityData\").split('\\n');",
-													"const randomIndex = Math.floor(Math.random() * cityCSV.length);",
+													"const randomIndex = Math.floor(Math.random() * (cityCSV.length - 1));",
 													"",
 													"// Select a random city and its ID",
 													"const [cityId, cityName] = cityCSV[randomIndex].split(',');",
@@ -3711,197 +3711,197 @@
 	],
 	"variable": [
 		{
-			"id": "f6f3fb6e-d8a4-4315-94b1-aa983578f09f",
+			"id": "a28e6cf2-1f5d-4ac4-91fa-8f363c10c3d4",
 			"key": "baseurl",
 			"value": "http://84.21.205.241:8081"
 		},
 		{
-			"id": "db9a741f-360f-41b2-9717-df976a6ff889",
+			"id": "4419e1d3-e788-47ff-9923-e04c07c65a0f",
 			"key": "username",
 			"value": ""
 		},
 		{
-			"id": "e9756419-5427-4a79-9828-7cb0935aa44f",
+			"id": "67ddd305-0dd3-4332-b7ab-a44aa7d2ac20",
 			"key": "email",
 			"value": ""
 		},
 		{
-			"id": "b2e7ab8f-94ab-42e4-8002-5cb28034cf5b",
+			"id": "bc962cc9-7734-4205-a4c4-0f04ae03f3f9",
 			"key": "password",
 			"value": "123456*A"
 		},
 		{
-			"id": "0d15b510-4c08-4dd6-a4a8-8cc7b26d4825",
+			"id": "291730f2-c36a-4568-915c-fe7441b851f2",
 			"key": "userID",
 			"value": "41"
 		},
 		{
-			"id": "b70bcc7a-7277-4352-8797-5b60a2be9a2a",
+			"id": "6d88dc61-da91-4e9b-982f-9fa3fa491e87",
 			"key": "randomNumber",
 			"value": ""
 		},
 		{
-			"id": "c0df15e4-2b47-4468-8b30-78b705334c6a",
+			"id": "94a5ec89-786a-46d5-92f2-4ebc5894d37d",
 			"key": "userExpertise",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "aa996f46-d177-4182-8996-353c25c8680c",
+			"id": "d571cf13-61b0-442d-bf60-1b34850552bb",
 			"key": "user_lastName",
 			"value": ""
 		},
 		{
-			"id": "27b60eff-3772-49c9-bddd-19472c749bf3",
+			"id": "fd44b95e-bbc9-4487-b913-487339f541f5",
 			"key": "user_fullName",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "25ed1ab2-d738-4784-8ef0-e6e4c08c0751",
+			"id": "0096c965-788c-4d8f-a235-426b60482ccf",
 			"key": "user_birthDate",
 			"value": ""
 		},
 		{
-			"id": "6f2a745a-3117-467c-9806-1e6238843143",
+			"id": "a5299b8c-75bf-4379-8bfd-818e31afd0d2",
 			"key": "user_picturePrivacy",
 			"value": ""
 		},
 		{
-			"id": "40b6db70-302a-4c68-93b0-565bc17274c4",
+			"id": "7064a7a3-b523-4657-8bb7-4db835ebcb68",
 			"key": "user_firstName",
 			"value": ""
 		},
 		{
-			"id": "db8e680d-a2c1-47fa-bcf4-5636f84c8888",
+			"id": "6d054db7-3f3e-4cbb-ab61-91be06f7ecff",
 			"key": "cityData",
 			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
 			"type": "string"
 		},
 		{
-			"id": "f41d6859-0c33-4d6e-bfab-c35bc0060354",
+			"id": "3e365571-942d-4b3a-b2f8-e6ad7cf94556",
 			"key": "city_name",
 			"value": ""
 		},
 		{
-			"id": "eb6e9185-5bd3-4b4b-9a6c-31bba98c1982",
+			"id": "801b91a9-a5f6-4faa-9641-ac822d5f6319",
 			"key": "city_id",
 			"value": ""
 		},
 		{
-			"id": "17f8437b-1af6-4e8f-a6b0-f656512bce0a",
+			"id": "0ff5b52e-8eb0-473f-8812-616ce0973471",
 			"key": "user_sex",
 			"value": ""
 		},
 		{
-			"id": "e9aba2d8-bcbd-4671-af70-c3cfb4821e9f",
+			"id": "15499369-472b-45ae-b80d-1760866ec87f",
 			"key": "requestId",
 			"value": ""
 		},
 		{
-			"id": "2333766f-6e44-4855-a500-c41005dee661",
+			"id": "5f97bbea-e346-483d-8a46-1ef5fbb4ac44",
 			"key": "senderUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "d6752f17-69da-4338-9a9f-f490c7036784",
+			"id": "7588ae64-30b4-4cbd-af6b-f7537cb4fc01",
 			"key": "recipientUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "881aba83-c63c-40a0-9bf3-b10df25c4a40",
+			"id": "dc9ffd32-267c-40d5-9c86-be444d467225",
 			"key": "deletePost",
 			"value": ""
 		},
 		{
-			"id": "12e97309-ddb8-4ffe-82d6-9a0f1b191b76",
+			"id": "0412f8a9-a438-41e8-8ba8-3535e42ed5c1",
 			"key": "newestPostId",
 			"value": ""
 		},
 		{
-			"id": "238e6cf8-e04c-49d4-88cf-b533e75efa38",
+			"id": "197e3eb5-e154-46db-8b0b-5904fbc3592b",
 			"key": "authUser",
 			"value": ""
 		},
 		{
-			"id": "2ef97b37-95e7-438c-a8da-fbbcde0ec55e",
+			"id": "8a045ca0-f9dc-45ae-b6d9-153b5e97ac8a",
 			"key": "hundred_symbols",
 			"value": ""
 		},
 		{
-			"id": "5b67f4f8-1957-4d9f-b175-823f2d4d544f",
+			"id": "33751acc-01a7-4692-b7d1-0a0427637688",
 			"key": "postCreate",
 			"value": ""
 		},
 		{
-			"id": "99a41b1b-dd68-41d8-9e03-96ddf4f74541",
+			"id": "ae683674-3ecc-4117-a515-b72926cc973d",
 			"key": "getPost",
 			"value": ""
 		},
 		{
-			"id": "82d08ece-1539-45d0-899e-c59cb60985ba",
+			"id": "ca0a6cd4-4b2a-44d3-8be5-b8cb378f672a",
 			"key": "hundred_symbols_edited",
 			"value": ""
 		},
 		{
-			"id": "b546f1cf-0464-4727-8729-8864c2f0a6ef",
+			"id": "658a5681-959a-48c8-896b-b08fd51b3073",
 			"key": "commentsCount",
 			"value": ""
 		},
 		{
-			"id": "5960b821-04c7-4267-aed9-9839dba36402",
+			"id": "b98ef4c3-c369-4f1f-b7de-bc6bbed1ee27",
 			"key": "findAllComments",
 			"value": ""
 		},
 		{
-			"id": "ffedb9b4-6dd9-4dcb-8805-61408e59741d",
+			"id": "4878ca78-bb34-4909-bef7-1ec89ee973f5",
 			"key": "hundred_symbols_comment",
 			"value": ""
 		},
 		{
-			"id": "54e5f09f-ead2-47fa-bed3-93e26a3f8ad0",
+			"id": "632a62a6-36d0-4161-877a-f05fda52ac41",
 			"key": "previousCommentsCount",
 			"value": ""
 		},
 		{
-			"id": "109ac452-cb0d-4082-8746-7c0e063c7ed8",
+			"id": "efbe5793-b647-4a26-9e0f-42f64e6b404b",
 			"key": "newestCommentId",
 			"value": ""
 		},
 		{
-			"id": "667e3bcc-fc09-4860-8564-be8a8c6c3783",
+			"id": "2fb13602-87ae-4351-90dc-e4b8280f9389",
 			"key": "commentCreate",
 			"value": ""
 		},
 		{
-			"id": "28438210-a62c-476b-9325-cbb97bda5b1b",
+			"id": "86e9b734-68b1-47df-a878-29c38abc2de4",
 			"key": "hundred_symbols_edited_comment",
 			"value": ""
 		},
 		{
-			"id": "7925f623-f1a6-45fc-8447-50ad1b896da6",
+			"id": "9efa7544-5a10-4f69-9fa8-84147ef86c0b",
 			"key": "commentLikes",
 			"value": ""
 		},
 		{
-			"id": "6bd147f4-c1f4-418f-b1b3-03954df99b7a",
+			"id": "ed2c1db2-4b01-4c5d-bdb0-2e23dcc61991",
 			"key": "skill1",
 			"value": ""
 		},
 		{
-			"id": "774f1195-8343-4630-a050-ac0f3ebcefd5",
+			"id": "ae86bc4b-6b6f-4206-8923-ec2dc0b40e18",
 			"key": "skill2",
 			"value": ""
 		},
 		{
-			"id": "211b1183-9465-48a2-9905-8b17f601bfa7",
+			"id": "0fe0adda-dd33-43d5-9c9a-a7889bfde5bb",
 			"key": "skill3",
 			"value": ""
 		},
 		{
-			"id": "6f8b221a-d101-4de8-91d0-ce924698364f",
+			"id": "77187228-0589-46ef-80ec-16a2d51cf64b",
 			"key": "getAllComments",
 			"value": ""
 		}

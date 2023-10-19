@@ -2167,65 +2167,6 @@
 							"response": []
 						},
 						{
-							"name": "Get All posts",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "b32b9a4c-4edf-4edd-af4c-9c43fb4d7add",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"// Access the response JSON directly\r",
-											"var response = pm.response.json();\r",
-											"\r",
-											"var responsePostId = response[0].postId;\r",
-											"console.log(responsePostId);\r",
-											"\r",
-											"// Compare 'newestPostId' with 'postId'\r",
-											"pm.test(\"Check if newestPostId matches postId\", function() {\r",
-											"    pm.expect(pm.collectionVariables.get('newestPostId')).to.equal(responsePostId, \"newestPostId does not match postId. Newest: \" + pm.collectionVariables.get('newestPostId') + \", Post: \" + responsePostId);\r",
-											"});\r",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "23bed68d-6463-4dd9-b7f0-40defe4be48c",
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "5f7f6ebc-781c-444f-b211-ba131c22801e",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseurl}}/api/post/",
-									"host": [
-										"{{baseurl}}"
-									],
-									"path": [
-										"api",
-										"post",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Edit post",
 							"event": [
 								{
@@ -2357,6 +2298,65 @@
 											"key": "postId",
 											"value": "{{newestPostId}}"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All posts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b32b9a4c-4edf-4edd-af4c-9c43fb4d7add",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Access the response JSON directly\r",
+											"var response = pm.response.json();\r",
+											"\r",
+											"var responsePostId = response[0].postId;\r",
+											"console.log(responsePostId);\r",
+											"\r",
+											"// Compare 'newestPostId' with 'postId'\r",
+											"pm.test(\"Check if newestPostId matches postId\", function() {\r",
+											"    pm.expect(pm.collectionVariables.get('newestPostId')).to.equal(responsePostId, \"newestPostId does not match postId. Newest: \" + pm.collectionVariables.get('newestPostId') + \", Post: \" + responsePostId);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "23bed68d-6463-4dd9-b7f0-40defe4be48c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "5f7f6ebc-781c-444f-b211-ba131c22801e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseurl}}/api/post/",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"api",
+										"post",
+										""
 									]
 								}
 							},
@@ -3438,7 +3438,6 @@
 											"        // Handle the error if needed\r",
 											"    } else {\r",
 											"        findallComments();\r",
-											"        createPost();\r",
 											"    }\r",
 											"});\r",
 											"\r",
@@ -3463,7 +3462,7 @@
 											"\r",
 											"        // You can also set a Postman environment variable with the result\r",
 											"        pm.collectionVariables.set(\"previousCommentsCount\", commentsCount);\r",
-											"\r",
+											"        createPost();\r",
 											"    }\r",
 											"});}\r",
 											"\r",
@@ -3585,7 +3584,7 @@
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
-											"pm.test(\"Liked Field is True\", function () {",
+											"pm.test(\"Liked Field should be true\", function () {",
 											"    var likedValue = pm.response.json().liked;",
 											"    pm.expect(likedValue).to.be.true;",
 											"});",
@@ -3711,198 +3710,203 @@
 	],
 	"variable": [
 		{
-			"id": "a28e6cf2-1f5d-4ac4-91fa-8f363c10c3d4",
+			"id": "83fddebb-1479-4512-a927-e3311150db62",
 			"key": "baseurl",
 			"value": "http://84.21.205.241:8081"
 		},
 		{
-			"id": "4419e1d3-e788-47ff-9923-e04c07c65a0f",
+			"id": "d36c3b39-df48-4c24-9ebd-332034c4dfc4",
 			"key": "username",
 			"value": ""
 		},
 		{
-			"id": "67ddd305-0dd3-4332-b7ab-a44aa7d2ac20",
+			"id": "c0609dbd-ba40-483b-96ef-932169149bea",
 			"key": "email",
 			"value": ""
 		},
 		{
-			"id": "bc962cc9-7734-4205-a4c4-0f04ae03f3f9",
+			"id": "c9ad7da3-a4da-4ede-93ea-f983e33ba35f",
 			"key": "password",
 			"value": "123456*A"
 		},
 		{
-			"id": "291730f2-c36a-4568-915c-fe7441b851f2",
+			"id": "725dd6ed-faf8-463e-94c7-db3102946e65",
 			"key": "userID",
 			"value": "41"
 		},
 		{
-			"id": "6d88dc61-da91-4e9b-982f-9fa3fa491e87",
+			"id": "642bd899-33f3-4cac-8f2f-6ed0a1a5ac52",
 			"key": "randomNumber",
 			"value": ""
 		},
 		{
-			"id": "94a5ec89-786a-46d5-92f2-4ebc5894d37d",
+			"id": "f68cd47f-7124-49ef-8628-c0193a79bfae",
 			"key": "userExpertise",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "d571cf13-61b0-442d-bf60-1b34850552bb",
+			"id": "b46bd113-d264-4d05-be78-a61d8cfc526e",
 			"key": "user_lastName",
 			"value": ""
 		},
 		{
-			"id": "fd44b95e-bbc9-4487-b913-487339f541f5",
+			"id": "d5009da8-c1a5-4c5b-9d69-239bdd5117d0",
 			"key": "user_fullName",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "0096c965-788c-4d8f-a235-426b60482ccf",
+			"id": "b478589f-dc8f-4be3-86f5-eee924d2364f",
 			"key": "user_birthDate",
 			"value": ""
 		},
 		{
-			"id": "a5299b8c-75bf-4379-8bfd-818e31afd0d2",
+			"id": "591b2ab7-f2c0-4a41-ab6a-41e44119b869",
 			"key": "user_picturePrivacy",
 			"value": ""
 		},
 		{
-			"id": "7064a7a3-b523-4657-8bb7-4db835ebcb68",
+			"id": "e2342746-38bc-46ab-b8c5-0712791e6a39",
 			"key": "user_firstName",
 			"value": ""
 		},
 		{
-			"id": "6d054db7-3f3e-4cbb-ab61-91be06f7ecff",
+			"id": "f53de8d8-154c-4c49-bf68-81526dafcfb0",
 			"key": "cityData",
 			"value": "1,Sofia\n2,Plovdiv\n3,Varna\n4,Burgas\n5,Ruse\n6,Stara Zagora\n7,Pleven\n8,Sliven\n9,Dobrich\n10,Shumen\n11,Pernik\n12,Haskovo\n13,Vratsa\n14,Kyustendil\n15,Montana\n16,Lovech\n17,Razgrad\n18,Borino\n19,Madan\n20,Zlatograd\n21,Pazardzhik\n22,Smolyan\n23,Blagoevgrad\n24,Nedelino\n25,Rudozem\n26,Devin\n27,Veliko Tarnovo\n28,Vidin\n29,Kirkovo\n30,Krumovgrad\n31,Dzhebel\n32,Silistra\n33,Sarnitsa\n34,Shiroka Laka\n35,Yambol\n36,Dospat\n37,Kardzhali\n38,Gabrovo\n39,Targovishte\n",
 			"type": "string"
 		},
 		{
-			"id": "3e365571-942d-4b3a-b2f8-e6ad7cf94556",
+			"id": "37211c90-4093-46e1-8a18-b74536dfb407",
 			"key": "city_name",
 			"value": ""
 		},
 		{
-			"id": "801b91a9-a5f6-4faa-9641-ac822d5f6319",
+			"id": "b2d1718f-1746-45b6-b529-075f11dc1387",
 			"key": "city_id",
 			"value": ""
 		},
 		{
-			"id": "0ff5b52e-8eb0-473f-8812-616ce0973471",
+			"id": "aaae02b1-7cdc-45dc-b647-d82efcdbdc6b",
 			"key": "user_sex",
 			"value": ""
 		},
 		{
-			"id": "15499369-472b-45ae-b80d-1760866ec87f",
+			"id": "efc58b85-b81d-4a26-9019-3d4491223942",
 			"key": "requestId",
 			"value": ""
 		},
 		{
-			"id": "5f97bbea-e346-483d-8a46-1ef5fbb4ac44",
+			"id": "47260249-f098-4d6a-9c82-c0e51182f017",
 			"key": "senderUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "7588ae64-30b4-4cbd-af6b-f7537cb4fc01",
+			"id": "939967d5-b624-4cea-809a-12a04a633550",
 			"key": "recipientUsername",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"id": "dc9ffd32-267c-40d5-9c86-be444d467225",
+			"id": "b1aced32-8ddb-4a29-8bb3-35b6b639be31",
 			"key": "deletePost",
 			"value": ""
 		},
 		{
-			"id": "0412f8a9-a438-41e8-8ba8-3535e42ed5c1",
+			"id": "848daf12-62f3-4a80-aed6-863bb2b58850",
 			"key": "newestPostId",
 			"value": ""
 		},
 		{
-			"id": "197e3eb5-e154-46db-8b0b-5904fbc3592b",
+			"id": "473729ca-75f5-4d58-b8cd-3face41ba752",
 			"key": "authUser",
 			"value": ""
 		},
 		{
-			"id": "8a045ca0-f9dc-45ae-b6d9-153b5e97ac8a",
+			"id": "816f94c5-385b-4156-82ae-49993353ed15",
 			"key": "hundred_symbols",
 			"value": ""
 		},
 		{
-			"id": "33751acc-01a7-4692-b7d1-0a0427637688",
+			"id": "f4c4f143-cc50-4a1b-9544-deea1571abb7",
 			"key": "postCreate",
 			"value": ""
 		},
 		{
-			"id": "ae683674-3ecc-4117-a515-b72926cc973d",
+			"id": "7c5bdea5-6f3e-476f-9829-2f77c7d61685",
 			"key": "getPost",
 			"value": ""
 		},
 		{
-			"id": "ca0a6cd4-4b2a-44d3-8be5-b8cb378f672a",
+			"id": "09ce391b-cd35-481f-9f9b-0fc19e50bb42",
 			"key": "hundred_symbols_edited",
 			"value": ""
 		},
 		{
-			"id": "658a5681-959a-48c8-896b-b08fd51b3073",
+			"id": "db854f36-fef5-4c98-a64d-629e0d925a52",
 			"key": "commentsCount",
 			"value": ""
 		},
 		{
-			"id": "b98ef4c3-c369-4f1f-b7de-bc6bbed1ee27",
+			"id": "8a18fa77-8585-471d-9de9-c2103b3cd9d4",
 			"key": "findAllComments",
 			"value": ""
 		},
 		{
-			"id": "4878ca78-bb34-4909-bef7-1ec89ee973f5",
+			"id": "a2a35d01-82b6-4c97-a784-4583feabdb6c",
 			"key": "hundred_symbols_comment",
 			"value": ""
 		},
 		{
-			"id": "632a62a6-36d0-4161-877a-f05fda52ac41",
+			"id": "dc037226-6837-43d4-beae-96313c813020",
 			"key": "previousCommentsCount",
 			"value": ""
 		},
 		{
-			"id": "efbe5793-b647-4a26-9e0f-42f64e6b404b",
+			"id": "c1674ef8-15d8-477b-be87-4729cafa2754",
 			"key": "newestCommentId",
 			"value": ""
 		},
 		{
-			"id": "2fb13602-87ae-4351-90dc-e4b8280f9389",
+			"id": "6504031f-dd15-4dc1-9c31-26bb646c9af5",
 			"key": "commentCreate",
 			"value": ""
 		},
 		{
-			"id": "86e9b734-68b1-47df-a878-29c38abc2de4",
+			"id": "b84ef810-18ae-49a9-b4c6-f4514028c6ca",
 			"key": "hundred_symbols_edited_comment",
 			"value": ""
 		},
 		{
-			"id": "9efa7544-5a10-4f69-9fa8-84147ef86c0b",
+			"id": "84bbadaa-eea1-4642-84d5-44a750c0a5a5",
 			"key": "commentLikes",
 			"value": ""
 		},
 		{
-			"id": "ed2c1db2-4b01-4c5d-bdb0-2e23dcc61991",
+			"id": "ca84db40-f605-45d1-9b0e-55c3ebeade55",
 			"key": "skill1",
 			"value": ""
 		},
 		{
-			"id": "ae86bc4b-6b6f-4206-8923-ec2dc0b40e18",
+			"id": "b067f805-565b-407b-a343-cb6fcf82356e",
 			"key": "skill2",
 			"value": ""
 		},
 		{
-			"id": "0fe0adda-dd33-43d5-9c9a-a7889bfde5bb",
+			"id": "9a84c975-57ba-4e0a-8505-17ff678fab95",
 			"key": "skill3",
 			"value": ""
 		},
 		{
-			"id": "77187228-0589-46ef-80ec-16a2d51cf64b",
+			"id": "e57e97d2-416a-42f7-8c47-0466307beb1f",
 			"key": "getAllComments",
+			"value": ""
+		},
+		{
+			"id": "ffe2385a-3ff2-4f62-b89f-3092b2a29774",
+			"key": "commentLiked",
 			"value": ""
 		}
 	]
